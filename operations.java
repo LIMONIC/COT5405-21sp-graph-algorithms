@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class operations {
-    // for data structure: adjacency matrix, adjacency list, heap?
+    // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned
 
     // return the list of connected components. Each component is itself a list.
@@ -36,18 +36,87 @@ public class operations {
         return res;
     }
 
-
+    /*
     // return a cycle, or an empty list.
-    // use indegree? adjacency list + indegree.
-//    public List<Integer> one_cycle() {
-//
-//    }
+    private static List<Integer> one_cycle(List<List<Integer>> graph) {
+        List<Integer> result = new ArrayList<>();
 
+        if (graph == null) {
+            return result;
+        }
+
+        int gSize = graph.size();
+        boolean[] visited = new boolean[gSize];
+        boolean[] recursion = new boolean[gSize];
+
+        for (int i = 0; i < gSize; i++)
+            result.addAll(isCyclic(i, visited, recursion, graph));
+
+        return result;
+    }
+
+    private static List<Integer> isCyclic(int i, boolean[] visited, boolean[] recursion, List<List<Integer>> graph) {
+        List<Integer> res = new ArrayList<>();
+
+        if (recursion[i]) {
+            res.add(i);
+            return res;
+        }
+        if (visited[i]){
+            res.clear();
+            return res;
+        }
+
+        visited[i] = true;
+        recursion[i] = true;
+
+        for (Integer v: graph.get(i))
+            return isCyclic(v, visited, recursion, graph);
+
+        recursion[i] = false;
+
+        return res;
+    }
+     */
+
+
+
+    /*
     // returns a map of shortest paths.
     // minheap
-//    public Map<Integer,List<Integer>> shortest_paths() {
-//
-//    }
+    public Map<Integer,List<Integer>> shortest_paths(List<List<Integer>> graph, int s) {
+        Map<Integer,List<Integer>> result = new HashMap<>();
+
+        int gSize = graph.size();
+        int dist[] = new int[gSize];;
+        Set<Integer> visited;
+
+        for (int i = 0; i < gSize; i++)
+            dist[i] = Integer.MAX_VALUE;
+
+        PriorityQueue<> pq(gSize);
+
+        pq.add(new Node(src, 0));
+
+        // Distance to the source is 0
+        dist[src] = 0;
+        while (settled.size() != V) {
+
+            // remove the minimum distance node
+            // from the priority queue
+            int u = pq.remove().node;
+
+            // adding the node whose distance is
+            // finalized
+            settled.add(u);
+
+            e_Neighbours(u);
+        }
+
+        return result;
+    }
+     */
+
 
     public static void main(String[] args) {
         //generate random graph
