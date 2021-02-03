@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 public class operations {
     // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned
@@ -36,8 +37,46 @@ public class operations {
         return res;
     }
 
-    /*
+
     // return a cycle, or an empty list.
+    private static List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
+        List<Integer> result = new ArrayList<>();
+        if (graph == null) {
+            return result;
+        }
+        Set<Integer> visited = new HashSet<>();
+
+        for (Integer vertex : graph.keySet()){
+            if (!visited.contains(vertex)){
+                List<Integer> cycle = findCycle(vertex, vertex, visited, new ArrayList<>(),graph);
+                if (cycle != null && cycle.size() > 2) {
+                    result = cycle;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    private static List<Integer> findCycle(int vertex, int previousVertex, Set<Integer> visited,List<Integer> res, Map<Integer,List<Integer>> graph ){
+        visited.add(vertex);
+        res.add(vertex);
+        List<Integer> neighborVertices = graph.get(vertex);
+        for (Integer v : neighborVertices) {
+            if (!visited.contains(v)) {
+                res.addAll(findCycle(v, v, visited, res, graph));
+            } else {
+                if (v != previousVertex) {
+                    return res;
+                }
+            }
+        }
+        return new ArrayList<>();
+    }
+
+
+
+    /*
     private static List<Integer> one_cycle(List<List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
 
@@ -77,7 +116,7 @@ public class operations {
 
         return res;
     }
-     */
+*/
 
 
 
@@ -119,6 +158,7 @@ public class operations {
 
 
     public static void main(String[] args) {
+        /*
         //generate random graph
         final int maxNumOfVertices = 100;
         final int rangeOfVertices = 1000;
@@ -157,14 +197,68 @@ public class operations {
             System.out.println("key: " + key + ", value: " + values.toString());
         }
         System.out.println("graph size is: " + graph.size());
-
+*/
         // call function
-        List<List<Integer>> cp = connected_components(graph);
+//        List<List<Integer>> cp = connected_components(graph);
+        // Test one cycle
+//        RandomGraph randomGraph = new RandomGraph();
+//        List<List<Integer>> graph = randomGraph.outputGraph();
+//        List<Integer> oc = one_cycle(graph);
+
+
+// List<List<Integer>>
+/*
+
+        List<List<Integer>> graph = new ArrayList<>();
+
+        List<Integer> list1 = new ArrayList<>();
+        list1.addAll(Arrays.asList(2));
+        List<Integer> list2 = new ArrayList<>();
+        list2.addAll(Arrays.asList(1,3));
+        List<Integer> list3 = new ArrayList<>();
+        list3.addAll(Arrays.asList(2,4));
+        List<Integer> list4 = new ArrayList<>();
+        list4.addAll(Arrays.asList(3,5));
+        List<Integer> list5 = new ArrayList<>();
+        list5.addAll(Arrays.asList(4));
+        graph.addAll(Arrays.asList(list1, list2, list3, list4, list5));
+        List<Integer> oc = one_cycle(graph);
+        for (List<Integer> li : graph){
+            System.out.println(li.toString());
+        }
+*/
+
+
+
+        Map<Integer,List<Integer>> graph = new HashMap<>();
+
+        List<Integer> list1 = new ArrayList<>();
+        list1.addAll(Arrays.asList(2,3));
+        graph.put(1, list1);
+        List<Integer> list2 = new ArrayList<>();
+        list2.addAll(Arrays.asList(1,3,5));
+        graph.put(2, list2);
+        List<Integer> list3 = new ArrayList<>();
+        list3.addAll(Arrays.asList(1,2,4));
+        graph.put(3, list3);
+        List<Integer> list4 = new ArrayList<>();
+        list4.addAll(Arrays.asList(3));
+        graph.put(4, list4);
+        List<Integer> list5 = new ArrayList<>();
+        list5.addAll(Arrays.asList(2));
+        graph.put(5, list5);
+
+        List<Integer> oc = one_cycle(graph);
+        for (Integer key : graph.keySet()) {
+            List<Integer> values = graph.get(key);
+            System.out.println("key: " + key + ", value: " + values.toString());
+        }
+
 
         // print result
-        for (List<Integer> res : cp) {
-            System.out.println(res.toString());
-        }
+
+            System.out.println(oc.toString());
+
     }
 
 }
