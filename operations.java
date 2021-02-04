@@ -2,6 +2,17 @@ import java.util.*;
 
 
 public class operations {
+//    Map<Integer,List<Integer>> graph;
+//    Set<Integer> visited;
+//    boolean hasCycle;
+//    public operations(Map<Integer,List<Integer>> graph){
+//        this.graph = graph;
+//        this.visited = new HashSet<>();
+//        this.hasCycle = false;
+//    }
+
+
+
     // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned
 
@@ -33,46 +44,58 @@ public class operations {
                 res.addAll(findConnectedComponents(v, visited, graph));
             }
         }
-
         return res;
     }
 
 
     // return a cycle, or an empty list.
-    private static List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
+    private List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
-        if (graph == null) {
-            return result;
-        }
         Set<Integer> visited = new HashSet<>();
+        Deque<Integer> stack = new ArrayDeque<>();
 
         for (Integer vertex : graph.keySet()){
-            if (!visited.contains(vertex)){
-                List<Integer> cycle = findCycle(vertex, vertex, visited, new ArrayList<>(),graph);
-                if (cycle != null && cycle.size() > 2) {
-                    result = cycle;
-                }
+            if (!visited.contains(vertex)) {
+                findCycle(vertex, vertex, visited, stack, result, graph);
             }
+        }
+        if (result.size() > 0) {
+            System.out.println("Cycle found!");
+        } else {
+            System.out.println("cycle not found!");
         }
         return result;
+
     }
 
+    private void findCycle(int currVertex, int prevVertex, Set<Integer> visited, Deque<Integer> stack, List<Integer> res, Map<Integer,List<Integer>> graph) {
 
-    private static List<Integer> findCycle(int vertex, int previousVertex, Set<Integer> visited,List<Integer> res, Map<Integer,List<Integer>> graph ){
-        visited.add(vertex);
-        res.add(vertex);
-        List<Integer> neighborVertices = graph.get(vertex);
-        for (Integer v : neighborVertices) {
-            if (!visited.contains(v)) {
-                res.addAll(findCycle(v, v, visited, res, graph));
+        if (res.size() != 0) {
+            return;
+        }
+
+        visited.add(currVertex);
+        stack.add(currVertex);
+
+        for (int v : graph.get(currVertex)) {
+            if (!visited.contains(v)){
+                findCycle(v, currVertex, visited, stack, res, graph);
             } else {
-                if (v != previousVertex) {
-                    return res;
+                if (v != prevVertex) {
+                    while (!stack.isEmpty()){
+                        int node = stack.pollLast();
+                        res.add(node);
+                        if (node == v){
+                            res.add(currVertex);
+                            break;
+                        }
+                    }
                 }
             }
         }
-        return new ArrayList<>();
+        stack.pollLast();
     }
+
 
 
 
@@ -229,7 +252,6 @@ public class operations {
 */
 
 
-
         Map<Integer,List<Integer>> graph = new HashMap<>();
 
         List<Integer> list1 = new ArrayList<>();
@@ -248,7 +270,40 @@ public class operations {
         list5.addAll(Arrays.asList(2));
         graph.put(5, list5);
 
-        List<Integer> oc = one_cycle(graph);
+//        List<Integer> list1 = new ArrayList<>();
+//        list1.addAll(Arrays.asList(2));
+//        graph.put(1, list1);
+//        List<Integer> list2 = new ArrayList<>();
+//        list2.addAll(Arrays.asList(1,3));
+//        graph.put(2, list2);
+//        List<Integer> list3 = new ArrayList<>();
+//        list3.addAll(Arrays.asList(2,4));
+//        graph.put(3, list3);
+//        List<Integer> list4 = new ArrayList<>();
+//        list4.addAll(Arrays.asList(3,5));
+//        graph.put(4, list4);
+//        List<Integer> list5 = new ArrayList<>();
+//        list5.addAll(Arrays.asList(4));
+//        graph.put(5, list5);
+
+//        List<Integer> list1 = new ArrayList<>();
+//        list1.addAll(Arrays.asList(3));
+//        graph.put(1, list1);
+//        List<Integer> list2 = new ArrayList<>();
+//        list2.addAll(Arrays.asList(3,5));
+//        graph.put(2, list2);
+//        List<Integer> list3 = new ArrayList<>();
+//        list3.addAll(Arrays.asList(1,2,4));
+//        graph.put(3, list3);
+//        List<Integer> list4 = new ArrayList<>();
+//        list4.addAll(Arrays.asList(3,5));
+//        graph.put(4, list4);
+//        List<Integer> list5 = new ArrayList<>();
+//        list5.addAll(Arrays.asList(2,4));
+//        graph.put(5, list5);
+
+        operations op = new operations();
+        List<Integer> oc = op.one_cycle(graph);
         for (Integer key : graph.keySet()) {
             List<Integer> values = graph.get(key);
             System.out.println("key: " + key + ", value: " + values.toString());
