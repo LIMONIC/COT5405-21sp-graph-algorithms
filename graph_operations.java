@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class operations {
+public class graph_operations {
 //    Map<Integer,List<Integer>> graph;
 //    Set<Integer> visited;
 //    boolean hasCycle;
@@ -302,7 +302,7 @@ public class operations {
 //        list5.addAll(Arrays.asList(2,4));
 //        graph.put(5, list5);
 
-        operations op = new operations();
+        graph_operations op = new graph_operations();
         List<Integer> oc = op.one_cycle(graph);
         for (Integer key : graph.keySet()) {
             List<Integer> values = graph.get(key);
