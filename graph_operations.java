@@ -26,25 +26,30 @@ public Set<Integer> visited;
         }
         Set<Integer> visited = new HashSet<>();
         for (Integer vertex : graph.keySet()) {
+//            System.out.println("visiting:" + vertex);
             if (!visited.contains(vertex)){
-                result.add(findConnectedComponents(vertex, visited, graph));
+                List<Integer> res = new ArrayList<>();
+                Deque<Integer> stack = new ArrayDeque<>();
+                stack.addLast(vertex);
+                visited.add(vertex);
+
+                while(!stack.isEmpty()) {
+                    int v = stack.pollLast();
+//                    System.out.println("v=" + v);
+                    res.add(v);
+                    List<Integer> adjList = graph.get(v);
+//                    System.out.println("adjList: "+adjList.toString());
+                    for (int neighbor : adjList) {
+                        if (!visited.contains(neighbor)) {
+                            stack.addLast(neighbor);
+                            visited.add(neighbor);
+                        }
+                    }
+                }
+                result.add(res);
             }
         }
         return result;
-    }
-
-    private static List<Integer> findConnectedComponents(int vertex, Set<Integer> visited, Map<Integer,List<Integer>> graph) {
-        visited.add(vertex);
-        List<Integer> res = new ArrayList<>();
-        res.add(vertex);
-        List<Integer> neighborVertices = graph.get(vertex);
-
-        for (Integer v : neighborVertices) {
-            if (!visited.contains(v)) {
-                res.addAll(findConnectedComponents(v, visited, graph));
-            }
-        }
-        return res;
     }
 
 
@@ -181,7 +186,7 @@ public Set<Integer> visited;
 
 
     public static void main(String[] args) {
-        /*
+/*
         //generate random graph
         final int maxNumOfVertices = 100;
         final int rangeOfVertices = 1000;
@@ -220,7 +225,7 @@ public Set<Integer> visited;
             System.out.println("key: " + key + ", value: " + values.toString());
         }
         System.out.println("graph size is: " + graph.size());
-*/
+
         // call function
 //        List<List<Integer>> cp = connected_components(graph);
         // Test one cycle
@@ -228,7 +233,7 @@ public Set<Integer> visited;
 //        List<List<Integer>> graph = randomGraph.outputGraph();
 //        List<Integer> oc = one_cycle(graph);
 
-
+*/
 // List<List<Integer>>
 /*
 
@@ -255,19 +260,19 @@ public Set<Integer> visited;
         Map<Integer,List<Integer>> graph = new HashMap<>();
 
         List<Integer> list1 = new ArrayList<>();
-        list1.addAll(Arrays.asList(2,3));
+        //list1.addAll(Arrays.asList(2,3));
         graph.put(1, list1);
         List<Integer> list2 = new ArrayList<>();
-        list2.addAll(Arrays.asList(1,3,5));
+        list2.addAll(Arrays.asList(3));
         graph.put(2, list2);
         List<Integer> list3 = new ArrayList<>();
-        list3.addAll(Arrays.asList(1,2,4));
+        list3.addAll(Arrays.asList(2));
         graph.put(3, list3);
         List<Integer> list4 = new ArrayList<>();
-        list4.addAll(Arrays.asList(3));
+        list4.addAll(Arrays.asList(5));
         graph.put(4, list4);
         List<Integer> list5 = new ArrayList<>();
-        list5.addAll(Arrays.asList(2));
+        list5.addAll(Arrays.asList(4));
         graph.put(5, list5);
 
 //        List<Integer> list1 = new ArrayList<>();
@@ -303,16 +308,18 @@ public Set<Integer> visited;
 //        graph.put(5, list5);
 
         graph_operations op = new graph_operations();
-        List<Integer> oc = op.one_cycle(graph);
-        for (Integer key : graph.keySet()) {
-            List<Integer> values = graph.get(key);
-            System.out.println("key: " + key + ", value: " + values.toString());
-        }
+        List<List<Integer>> oc = op.connected_components(graph);
+//        for (Integer key : graph.keySet()) {
+//            List<Integer> values = graph.get(key);
+//            System.out.println("key: " + key + ", value: " + values.toString());
+//        }
 
 
         // print result
-
-            System.out.println(oc.toString());
+        for (List<Integer> key : oc) {
+            System.out.println(key.toString());
+        }
+//            System.out.println(oc.toString());
 
     }
 

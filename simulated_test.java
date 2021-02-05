@@ -15,7 +15,7 @@ public class simulated_test {
 
 
     public static void main(String[] args) {
-        graph_simulator gs = new graph_simulator(100000);
+        graph_simulator gs = new graph_simulator(5000);
         Map<Integer, List<Integer>> graph1 = gs.nCycle();
         Map<Integer, List<Integer>> graph2 = gs.completeGraph();
         Map<Integer, List<Integer>> graph3 = gs.emptyGraph();
@@ -32,18 +32,21 @@ public class simulated_test {
         long startTime, stopTime;
         startTime = System.nanoTime();
 //        for (int i = 0; i < 1; i++) {
-            cycle = go.one_cycle(graph1);
+        connectedComponents = go.connected_components(graph1);
 //        }
         stopTime = System.nanoTime();
         System.out.println("Run time of connected_components() (microsecond): " + ((stopTime - startTime) / 10 / 1000));
 
-        Runtime runtime = Runtime.getRuntime();
-        runtime.gc();
-        // Calculate the used memory
-        long memory = runtime.totalMemory() - runtime.freeMemory();
-        System.out.println("Used memory is bytes: " + memory);
+//        Runtime runtime = Runtime.getRuntime();
+//        runtime.gc();
+//        // Calculate the used memory
+//        long memory = runtime.totalMemory() - runtime.freeMemory();
+//        System.out.println("Used memory is bytes: " + memory);
 
-        System.out.println(cycle.toString());
+//        for (List<Integer> cc : connectedComponents ) {
+//            System.out.println(cc.toString());
+//
+//        }
 
 //        for (List<Integer> key : connectedComponents) {
 //            System.out.println(key.toString());
