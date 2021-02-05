@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class operations {
     // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned
@@ -37,43 +36,53 @@ public class operations {
         return res;
     }
 
-
     // return a cycle, or an empty list.
-    private static List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
+    private List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
-        if (graph == null) {
-            return result;
-        }
         Set<Integer> visited = new HashSet<>();
+        Deque<Integer> stack = new ArrayDeque<>();
 
         for (Integer vertex : graph.keySet()){
-            if (!visited.contains(vertex)){
-                List<Integer> cycle = findCycle(vertex, vertex, visited, new ArrayList<>(),graph);
-                if (cycle != null && cycle.size() > 2) {
-                    result = cycle;
-                }
+            if (!visited.contains(vertex)) {
+                findCycle(vertex, vertex, visited, stack, result, graph);
             }
+        }
+        if (result.size() > 0) {
+            System.out.println("Cycle found!");
+        } else {
+            System.out.println("cycle not found!");
         }
         return result;
+
     }
 
+    private void findCycle(int currVertex, int prevVertex, Set<Integer> visited, Deque<Integer> stack, List<Integer> res, Map<Integer,List<Integer>> graph) {
 
-    private static List<Integer> findCycle(int vertex, int previousVertex, Set<Integer> visited,List<Integer> res, Map<Integer,List<Integer>> graph ){
-        visited.add(vertex);
-        res.add(vertex);
-        List<Integer> neighborVertices = graph.get(vertex);
-        for (Integer v : neighborVertices) {
-            if (!visited.contains(v)) {
-                res.addAll(findCycle(v, v, visited, res, graph));
+        if (res.size() != 0) {
+            return;
+        }
+
+        visited.add(currVertex);
+        stack.add(currVertex);
+
+        for (int v : graph.get(currVertex)) {
+            if (!visited.contains(v)){
+                findCycle(v, currVertex, visited, stack, res, graph);
             } else {
-                if (v != previousVertex) {
-                    return res;
+                if (v != prevVertex) {
+                    while (!stack.isEmpty()){
+                        int node = stack.pollLast();
+                        res.add(node);
+                        if (node == v){
+                            res.add(currVertex);
+                            break;
+                        }
+                    }
                 }
             }
         }
-        return new ArrayList<>();
+        stack.pollLast();
     }
-
 
     /*
     private static List<Integer> one_cycle(List<List<Integer>> graph) {
@@ -122,11 +131,11 @@ public class operations {
     public Map<Integer,List<Integer>> shortest_paths(Map<Integer,List<Integer>> graph, int s) {
         int gSize = graph.size();
         Map<Integer,List<Integer>> result = new HashMap<Integer,List<Integer>>(gSize);
-        int dist[] = new int[gSize];
+        Map<Integer, Integer> dist = new HashMap<Integer, Integer>(gSize);
         Set<Integer> visited = new HashSet<Integer>();
 
-        for (int i = 0; i < gSize; i++)
-            dist[i] = Integer.MAX_VALUE;
+        for (Integer k: graph.keySet())
+            dist.put(k, Integer.MAX_VALUE);
 
         PriorityQueue<Vertex> pq = new PriorityQueue<Vertex>(gSize, new Vertex());
 
@@ -134,7 +143,7 @@ public class operations {
         List<Integer> list = new ArrayList<>();
         list.add(s);
         result.put(s, list);
-        dist[s-1] = 0;
+        dist.replace(s-1, 0);
 
         while (visited.size() != gSize) {
             int v = pq.remove().getID();
@@ -145,28 +154,26 @@ public class operations {
         return result;
     }
 
-    private void get_path(int v, Set<Integer> visited, int[] dist, PriorityQueue<Vertex> pq, Map<Integer,List<Integer>> result, Map<Integer,List<Integer>> graph)
+    private void get_path(int v, Set<Integer> visited, Map<Integer, Integer> dist, PriorityQueue<Vertex> pq, Map<Integer,List<Integer>> result, Map<Integer,List<Integer>> graph)
     {
         int edgeWeight = -1;
         int newDis = -1;
 
         // All the neighbors of v
         for(Integer uv : graph.get(v)) {
-            Vertex u = new Vertex(uv, 1);      // using unweighted graphs so the edge weights are intrinsically 1
-
             if (!visited.contains(uv)) {
-                edgeWeight = uv;
-                newDis = dist[v-1] + edgeWeight;
+                edgeWeight = 1;
+                newDis = dist.get(v) + edgeWeight;
 
-                if (newDis < dist[uv-1]) {
-                    dist[uv-1] = newDis;
+                if (newDis < dist.get(uv)) {
+                    dist.replace(uv, newDis);
                     List<Integer> list = new ArrayList<>();
                     list.addAll(result.get(v));
                     list.add(uv);
                     result.put(uv, list);
                 }
 
-                pq.add(new Vertex(uv, dist[uv-1]));
+                pq.add(new Vertex(uv, dist.get(uv)));
             }
         }
     }
