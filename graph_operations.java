@@ -11,7 +11,7 @@ public class graph_operations {
 //        this.hasCycle = false;
 //    }
 
-
+public Set<Integer> visited;
 
     // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned
@@ -49,7 +49,7 @@ public class graph_operations {
 
 
     // return a cycle, or an empty list.
-    private List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
+    public List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
         Set<Integer> visited = new HashSet<>();
         Deque<Integer> stack = new ArrayDeque<>();
