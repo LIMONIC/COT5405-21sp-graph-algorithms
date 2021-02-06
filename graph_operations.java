@@ -11,7 +11,6 @@ public class graph_operations {
 //        this.hasCycle = false;
 //    }
 
-public Set<Integer> visited;
 
     // for data structure: adjacency list
     // Storing graph : adjacency list. map<userID, List<userID>> ; since all user id are randomly assigned

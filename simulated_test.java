@@ -15,13 +15,13 @@ public class simulated_test {
 
 
     public static void main(String[] args) {
-        graph_simulator gs = new graph_simulator(100000);
-        Map<Integer, List<Integer>> graph1 = gs.nCycle();
+        graph_simulator gs = new graph_simulator(50000);
+//        Map<Integer, List<Integer>> graph1 = gs.nCycle();
         Map<Integer, List<Integer>> graph2 = gs.completeGraph();
-        Map<Integer, List<Integer>> graph3 = gs.emptyGraph();
-        Map<Integer, List<Integer>> graph4 = gs.heap();
-        Map<Integer, List<Integer>> graph5 = gs.truncatedHeap(2);
-        Map<Integer, List<Integer>> graph6 = gs.equivalenceModK(2);
+//        Map<Integer, List<Integer>> graph3 = gs.emptyGraph();
+//        Map<Integer, List<Integer>> graph4 = gs.heap();
+//        Map<Integer, List<Integer>> graph5 = gs.truncatedHeap(2);
+//        Map<Integer, List<Integer>> graph6 = gs.equivalenceModK(2);
 
         List<List<Integer>> connectedComponents = new ArrayList<>();
         List<Integer> cycle = new ArrayList<>();
@@ -32,7 +32,7 @@ public class simulated_test {
         long startTime, stopTime;
         startTime = System.nanoTime();
 //        for (int i = 0; i < 1; i++) {
-            cycle = go.one_cycle(graph1);
+//            cycle = go.one_cycle(graph1);
 //        }
         stopTime = System.nanoTime();
         System.out.println("Run time of connected_components() (microsecond): " + ((stopTime - startTime) / 10 / 1000));
