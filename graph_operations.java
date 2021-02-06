@@ -46,7 +46,6 @@ public class graph_operations {
         return res;
     }
 
-
     // return a cycle, or an empty list.
     public List<Integer> one_cycle(Map<Integer,List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
@@ -95,9 +94,6 @@ public class graph_operations {
         stack.pollLast();
     }
 
-
-
-
     /*
     private static List<Integer> one_cycle(List<List<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
@@ -140,44 +136,91 @@ public class graph_operations {
     }
 */
 
-
-
-    /*
     // returns a map of shortest paths.
     // minheap
-    public Map<Integer,List<Integer>> shortest_paths(List<List<Integer>> graph, int s) {
-        Map<Integer,List<Integer>> result = new HashMap<>();
-
+    public Map<Integer,List<Integer>> shortest_paths(Map<Integer,List<Integer>> graph, int s) {
         int gSize = graph.size();
-        int dist[] = new int[gSize];;
-        Set<Integer> visited;
+        Map<Integer,List<Integer>> result = new HashMap<Integer,List<Integer>>(gSize);
+        Map<Integer, Integer> dist = new HashMap<Integer, Integer>(gSize);
+        Set<Integer> visited = new HashSet<Integer>();
 
-        for (int i = 0; i < gSize; i++)
-            dist[i] = Integer.MAX_VALUE;
+        for (Integer k: graph.keySet())
+            dist.put(k, Integer.MAX_VALUE);
 
-        PriorityQueue<> pq(gSize);
+        PriorityQueue<Vertex> pq = new PriorityQueue<Vertex>(gSize, new Vertex());
 
-        pq.add(new Node(src, 0));
+        pq.add(new Vertex(s, 0));
+        List<Integer> list = new ArrayList<>();
+        list.add(s);
+        result.put(s, list);
+        dist.replace(s-1, 0);
 
-        // Distance to the source is 0
-        dist[src] = 0;
-        while (settled.size() != V) {
-
-            // remove the minimum distance node
-            // from the priority queue
-            int u = pq.remove().node;
-
-            // adding the node whose distance is
-            // finalized
-            settled.add(u);
-
-            e_Neighbours(u);
+        while (visited.size() != gSize) {
+            int v = pq.remove().getID();
+            visited.add(v);
+            get_path(v, visited, dist, pq, result, graph);
         }
 
         return result;
     }
-     */
 
+    private void get_path(int v, Set<Integer> visited, Map<Integer, Integer> dist, PriorityQueue<Vertex> pq, Map<Integer,List<Integer>> result, Map<Integer,List<Integer>> graph)
+    {
+        int edgeWeight = -1;
+        int newDis = -1;
+
+        // All the neighbors of v
+        for(Integer uv : graph.get(v)) {
+            if (!visited.contains(uv)) {
+                edgeWeight = 1;
+                newDis = dist.get(v) + edgeWeight;
+
+                if (newDis < dist.get(uv)) {
+                    dist.replace(uv, newDis);
+                    List<Integer> list = new ArrayList<>();
+                    list.addAll(result.get(v));
+                    list.add(uv);
+                    result.put(uv, list);
+                }
+
+                pq.add(new Vertex(uv, dist.get(uv)));
+            }
+        }
+    }
+
+    // Class to represent a node in the graph
+    class Vertex implements Comparator<Vertex> {
+        private Integer id;
+        private Integer dis;
+
+        public Vertex()
+        {
+        }
+
+        public Vertex(Integer id, Integer dis)
+        {
+            this.id = id;
+            this.dis = dis;
+        }
+
+        public Integer getDis() {
+            return dis;
+        }
+
+        public Integer getID() {
+            return id;
+        }
+
+        @Override
+        public int compare(Vertex v1, Vertex v2)
+        {
+            if (v1.dis < v2.dis)
+                return -1;
+            if (v1.dis > v2.dis)
+                return 1;
+            return 0;
+        }
+    }
 
     public static void main(String[] args) {
         /*
@@ -301,17 +344,29 @@ public class graph_operations {
 //        list5.addAll(Arrays.asList(2,4));
 //        graph.put(5, list5);
 
-        graph_operations op = new graph_operations();
-        List<Integer> oc = op.one_cycle(graph);
+//        graph_operations op = new graph_operations();
+//        List<Integer> oc = op.one_cycle(graph);
+//        for (Integer key : graph.keySet()) {
+//            List<Integer> values = graph.get(key);
+//            System.out.println("key: " + key + ", value: " + values.toString());
+//        }
+//        // print result
+//        System.out.println(oc.toString());
+
+        graph_operations obj = new graph_operations();
+
+        Map<Integer,List<Integer>> sp = obj.shortest_paths(graph, 1);
         for (Integer key : graph.keySet()) {
             List<Integer> values = graph.get(key);
             System.out.println("key: " + key + ", value: " + values.toString());
         }
 
-
         // print result
-
-            System.out.println(oc.toString());
+        System.out.println("result:");
+        for (Integer key : sp.keySet()) {
+            List<Integer> values = sp.get(key);
+            System.out.println("key: " + key + ", value: " + values.toString());
+        }
 
     }
 
