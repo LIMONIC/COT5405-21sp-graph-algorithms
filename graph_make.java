@@ -12,14 +12,14 @@ import java.util.*;
 
 public class graph_make {
 
+    Map<Integer, Customer> customerList = new HashMap<>();
+    Map<Integer,List<Integer>> graph = new HashMap<>();
+
 //    public static String filePath;
     public void readRatingFiles() throws Exception {
         /* read input */
-
-         String filePath = "C:\\Users\\ztyam\\OneDrive - University of Florida\\0_UF Class\\2021 Spring\\01_AOA\\Assignment\\01\\assignment1-data\\ratings_data_1.txt";
+        String filePath = "assignment_data/test.txt";
         File file = new File(filePath);
-
-        Map<Integer, Customer> customerList = new HashMap<>();
 
         if (file.exists()) {
 
@@ -80,14 +80,93 @@ public class graph_make {
             }
         }
 
-
-
-
         Map<Integer, Integer> input = new HashMap<>(); // input, freq
-
-
         //...
 
+    }
+
+    // one movie in common
+    public void one_movie() {
+        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
+        for (Integer i : customerList.keySet()){
+            graph.put(i, new ArrayList<>());
+            for(Integer j : customerList.keySet()){
+                if(i == j)
+                    continue;
+                Set<Integer> im = customerList.get(i).movieList.keySet();
+                Set<Integer> jm = customerList.get(j).movieList.keySet();
+                im.retainAll(jm);
+                // If two customers have rated one movie in common, they are adjacent
+                if(im.size()!=0) {
+                    List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
+                    adjList.add(j);
+                    graph.put(i, adjList);
+                }
+            }
+        }
+    }
+
+    // 3 ratings in common
+    public void three_ratings() {
+        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
+        for (Integer i : customerList.keySet()){
+            graph.put(i, new ArrayList<>());
+            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(i).movieList);
+            for(Integer j : customerList.keySet()){
+                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(j).movieList);
+                if(i == j)
+                    continue;
+                Set<Integer> im = new HashSet<>(ml_i.keySet());
+                Set<Integer> jm = new HashSet<>(ml_j.keySet());
+                im.retainAll(jm);
+                // If two customers have rated one movie in common, they are adjacent
+                if(im.size()>=3) {
+                    int n = 0;
+                    for(Integer ri : im)
+                        if(ml_i.get(ri).val == ml_j.get(ri).val)
+                            ++n;
+                    if(n>=3){
+                        List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
+                        adjList.add(j);
+                        graph.put(i, adjList);
+                    }
+                }
+            }
+        }
+    }
+
+    // 1 data in common
+    public void one_data() {
+        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
+        for (Integer i : customerList.keySet()){
+            graph.put(i, new ArrayList<>());
+            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(i).movieList);
+            for(Integer j : customerList.keySet()){
+                if(i == j)
+                    continue;
+                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(j).movieList);
+                Set<Integer> im = new HashSet<>(ml_i.keySet());
+                Set<Integer> jm = new HashSet<>(ml_j.keySet());
+                im.retainAll(jm);
+                // If two customers have rated one movie in common, they are adjacent
+                if(im.size()!=0) {
+                    for(Integer ri : im){
+                        int yi = ml_i.get(ri).year;
+                        int mi = ml_i.get(ri).year;
+                        int di = ml_i.get(ri).year;
+                        int yj = ml_j.get(ri).year;
+                        int mj = ml_j.get(ri).year;
+                        int dj = ml_j.get(ri).year;
+                        if(yi == yj && mi == mj && di == dj)
+                        {
+                            List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
+                            adjList.add(j);
+                            graph.put(i, adjList);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -100,6 +179,13 @@ public class graph_make {
 //            filePath = args[0];
             graph_make gm = new graph_make();
             gm.readRatingFiles();
+            gm.three_ratings();
+
+            for (Integer key : gm.graph.keySet()) {
+                List<Integer> values = gm.graph.get(key);
+                System.out.println("key: " + key + ", value: " + values.toString());
+            }
+
             // ...
         } catch (Exception e) {
 //            System.out.println("File not found at: " + args[0]);
