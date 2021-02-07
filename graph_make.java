@@ -152,11 +152,11 @@ public class graph_make {
                 if(im.size()!=0) {
                     for(Integer ri : im){
                         int yi = ml_i.get(ri).year;
-                        int mi = ml_i.get(ri).year;
-                        int di = ml_i.get(ri).year;
+                        int mi = ml_i.get(ri).month;
+                        int di = ml_i.get(ri).day;
                         int yj = ml_j.get(ri).year;
-                        int mj = ml_j.get(ri).year;
-                        int dj = ml_j.get(ri).year;
+                        int mj = ml_j.get(ri).month;
+                        int dj = ml_j.get(ri).day;
                         if(yi == yj && mi == mj && di == dj)
                         {
                             List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
@@ -166,29 +166,6 @@ public class graph_make {
                     }
                 }
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-//            if (args.length < 1) {
-//                System.out.println("The Input File name is not specified!");
-//                System.out.println("path:[input.txt]");
-//                return;
-//            }
-//            filePath = args[0];
-            graph_make gm = new graph_make();
-            gm.readRatingFiles();
-            gm.three_ratings();
-
-            for (Integer key : gm.graph.keySet()) {
-                List<Integer> values = gm.graph.get(key);
-                System.out.println("key: " + key + ", value: " + values.toString());
-            }
-
-            // ...
-        } catch (Exception e) {
-//            System.out.println("File not found at: " + args[0]);
         }
     }
 
