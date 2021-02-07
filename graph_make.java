@@ -87,20 +87,25 @@ public class graph_make {
 
     // one movie in common
     public void one_movie() {
-        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
-        for (Integer i : customerList.keySet()){
-            graph.put(i, new ArrayList<>());
-            for(Integer j : customerList.keySet()){
-                if(i == j)
-                    continue;
-                Set<Integer> im = customerList.get(i).movieList.keySet();
-                Set<Integer> jm = customerList.get(j).movieList.keySet();
+        graph.clear();
+        Integer[] id = customerList.keySet().toArray(new Integer[0]);
+        int id_num = customerList.keySet().size();
+        for (int i = 0; i < id_num; ++i){
+            graph.putIfAbsent(id[i], new ArrayList<>());
+            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(id[i]).movieList);
+            for(int j = i + 1; j < id_num; ++j){
+                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(id[j]).movieList);
+                Set<Integer> im = new HashSet<>(ml_i.keySet());
+                Set<Integer> jm = new HashSet<>(ml_j.keySet());
                 im.retainAll(jm);
                 // If two customers have rated one movie in common, they are adjacent
                 if(im.size()!=0) {
-                    List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
-                    adjList.add(j);
-                    graph.put(i, adjList);
+                    List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
+                    List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
+                    adjList_i.add(id[j]);
+                    adjList_j.add(id[i]);
+                    graph.put(id[i], adjList_i);
+                    graph.put(id[j], adjList_j);
                 }
             }
         }
@@ -108,14 +113,14 @@ public class graph_make {
 
     // 3 ratings in common
     public void three_ratings() {
-        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
-        for (Integer i : customerList.keySet()){
-            graph.put(i, new ArrayList<>());
-            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(i).movieList);
-            for(Integer j : customerList.keySet()){
-                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(j).movieList);
-                if(i == j)
-                    continue;
+        graph.clear();
+        Integer[] id = customerList.keySet().toArray(new Integer[0]);
+        int id_num = customerList.keySet().size();
+        for (int i = 0; i < id_num; ++i){
+            graph.putIfAbsent(id[i], new ArrayList<>());
+            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(id[i]).movieList);
+            for(int j = i + 1; j < id_num; ++j){
+                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(id[j]).movieList);
                 Set<Integer> im = new HashSet<>(ml_i.keySet());
                 Set<Integer> jm = new HashSet<>(ml_j.keySet());
                 im.retainAll(jm);
@@ -126,9 +131,12 @@ public class graph_make {
                         if(ml_i.get(ri).val == ml_j.get(ri).val)
                             ++n;
                     if(n>=3){
-                        List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
-                        adjList.add(j);
-                        graph.put(i, adjList);
+                        List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
+                        List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
+                        adjList_i.add(id[j]);
+                        adjList_j.add(id[i]);
+                        graph.put(id[i], adjList_i);
+                        graph.put(id[j], adjList_j);
                     }
                 }
             }
@@ -137,14 +145,14 @@ public class graph_make {
 
     // 1 data in common
     public void one_data() {
-        // todo: 时间复杂读好像可以优化一下，i是j的neighbour意味着j也是i的，所以i判断过j之后，到j时就不需要再来判断i了
-        for (Integer i : customerList.keySet()){
-            graph.put(i, new ArrayList<>());
-            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(i).movieList);
-            for(Integer j : customerList.keySet()){
-                if(i == j)
-                    continue;
-                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(j).movieList);
+        graph.clear();
+        Integer[] id = customerList.keySet().toArray(new Integer[0]);
+        int id_num = customerList.keySet().size();
+        for (int i = 0; i < id_num; ++i){
+            graph.putIfAbsent(id[i], new ArrayList<>());
+            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(id[i]).movieList);
+            for(int j = i + 1; j < id_num; ++j){
+                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(id[j]).movieList);
                 Set<Integer> im = new HashSet<>(ml_i.keySet());
                 Set<Integer> jm = new HashSet<>(ml_j.keySet());
                 im.retainAll(jm);
@@ -159,9 +167,12 @@ public class graph_make {
                         int dj = ml_j.get(ri).day;
                         if(yi == yj && mi == mj && di == dj)
                         {
-                            List<Integer> adjList = graph.getOrDefault(i, new ArrayList<>());
-                            adjList.add(j);
-                            graph.put(i, adjList);
+                            List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
+                            List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
+                            adjList_i.add(id[j]);
+                            adjList_j.add(id[i]);
+                            graph.put(id[i], adjList_i);
+                            graph.put(id[j], adjList_j);
                         }
                     }
                 }
