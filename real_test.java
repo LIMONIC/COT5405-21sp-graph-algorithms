@@ -29,11 +29,17 @@ public class real_test {
             gm.readRatingFiles();
             graph_operations op = new graph_operations();
             File writeName;
+            long startTime, endTime;
 
             // one_movie
             // ----------------------------------------
+            startTime = System.currentTimeMillis();
+
             System.out.println("one movie:");
             gm.one_movie();
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
 
             // output the graph
             try {
@@ -52,18 +58,29 @@ public class real_test {
                 e.printStackTrace();
             }
 
+            startTime = System.currentTimeMillis();
             // connected components
             List<List<Integer>> cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
             System.out.println("The number of connected components: " + cp.size());
             System.out.print("Size of each connected component: ");
             for(List<Integer> c : cp){
                 System.out.print(c.size() + " ");
             }
             System.out.println();
+
+
             // three_ratings
             // ----------------------------------------
+            startTime = System.currentTimeMillis();
             System.out.println("three ratings:");
+
             gm.three_ratings();
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
 
             // output the graph
             try {
@@ -82,8 +99,12 @@ public class real_test {
                 e.printStackTrace();
             }
 
+            startTime = System.currentTimeMillis();
             // connected components
             cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
             System.out.println("The number of connected components: " + cp.size());
             System.out.print("Size of each connected component: ");
             for(List<Integer> c : cp){
@@ -93,8 +114,13 @@ public class real_test {
 
             // one_data
             // ----------------------------------------
+            startTime = System.currentTimeMillis();
             System.out.println("one data:");
+
             gm.one_data();
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
 
             // output the graph
             try {
@@ -114,7 +140,11 @@ public class real_test {
             }
 
             // connected components
+            startTime = System.currentTimeMillis();
             cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
             System.out.println("The number of connected components: " + cp.size());
             System.out.print("Size of each connected component: ");
             for(List<Integer> c : cp){
