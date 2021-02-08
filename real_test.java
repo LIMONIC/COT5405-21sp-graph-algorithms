@@ -15,11 +15,14 @@ public class real_test {
 
             // one_movie
             // ----------------------------------------
+            System.out.println("one movie:");
             gm.one_movie();
+            /*
             for (Integer key : gm.graph.keySet()) {
                 List<Integer> values = gm.graph.get(key);
                 System.out.println("key: " + key + ", value: " + values.toString());
             }
+             */
 
             // connected components
             List<List<Integer>> cp = op.connected_components(gm.graph);
@@ -31,11 +34,14 @@ public class real_test {
 
             // three_ratings
             // ----------------------------------------
+            System.out.println("three ratings:");
             gm.three_ratings();
+            /*
             for (Integer key : gm.graph.keySet()) {
                 List<Integer> values = gm.graph.get(key);
                 System.out.println("key: " + key + ", value: " + values.toString());
             }
+             */
 
             // connected components
             cp = op.connected_components(gm.graph);
@@ -47,11 +53,14 @@ public class real_test {
 
             // one_data
             // ----------------------------------------
+            System.out.println("one data:");
             gm.one_data();
+            /*
             for (Integer key : gm.graph.keySet()) {
                 List<Integer> values = gm.graph.get(key);
                 System.out.println("key: " + key + ", value: " + values.toString());
             }
+             */
 
             // connected components
             cp = op.connected_components(gm.graph);
