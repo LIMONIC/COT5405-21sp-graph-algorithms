@@ -1,6 +1,7 @@
-import org.apache.commons.lang3.StringUtils;
+//import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 import java.util.List;
+import java.lang.String;
 
 public class real_test {
     public static void main(String[] args) {
@@ -26,7 +27,7 @@ public class real_test {
 //            }
 //            filePath = args[0];
             graph_make gm = new graph_make();
-            gm.readRatingFiles();
+//            gm.readRatingFiles();
             graph_operations op = new graph_operations();
             File writeName;
             long startTime, endTime;
@@ -50,7 +51,7 @@ public class real_test {
                 ) {
                     for (Integer key : gm.graph.keySet()) {
                         List<Integer> values = gm.graph.get(key);
-                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+//                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
                     }
                     out.flush(); // 把缓存区内容压入文件
                 }
@@ -91,7 +92,7 @@ public class real_test {
                 ) {
                     for (Integer key : gm.graph.keySet()) {
                         List<Integer> values = gm.graph.get(key);
-                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+//                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
                     }
                     out.flush(); // 把缓存区内容压入文件
                 }
@@ -131,7 +132,7 @@ public class real_test {
                 ) {
                     for (Integer key : gm.graph.keySet()) {
                         List<Integer> values = gm.graph.get(key);
-                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+//                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
                     }
                     out.flush(); // 把缓存区内容压入文件
                 }
