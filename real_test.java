@@ -31,7 +31,70 @@ public class real_test {
             File writeName;
             long startTime, endTime;
 
-            // one_movie
+            // output user list
+            try {
+                writeName = new File("user_list_1.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+                writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+                try (FileWriter writer = new FileWriter(writeName);
+                     BufferedWriter out = new BufferedWriter(writer)
+                ) {
+                    for(Integer uid : gm.customerList.keySet()){
+                        out.write(uid + ":\r\n");
+                        Customer u = gm.customerList.get(uid);
+                        for(Integer mid : u.movieList.keySet()){
+                            Rating m = u.movieList.get(mid);
+                            out.write(mid + "," + m.val + "," + m.year + "-" + m.month + "-" + m.day + "\r\n");
+                        }
+                    }
+                    out.flush(); // 把缓存区内容压入文件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("User list output finished!");
+
+            // Super Reviewer
+            // ----------------------------------------
+            startTime = System.currentTimeMillis();
+
+            System.out.println("Super Reviewer:");
+            gm.super_reviewer(265);
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
+
+            // output the graph
+            try {
+                writeName = new File("Super_Reviewer_graph.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+                writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+                try (FileWriter writer = new FileWriter(writeName);
+                     BufferedWriter out = new BufferedWriter(writer)
+                ) {
+                    for (Integer key : gm.graph.keySet()) {
+                        List<Integer> values = gm.graph.get(key);
+                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+                    }
+                    out.flush(); // 把缓存区内容压入文件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            startTime = System.currentTimeMillis();
+            // connected components
+            List<List<Integer>> cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
+            System.out.println("The number of connected components: " + cp.size());
+            System.out.print("Size of each connected component: ");
+            for(List<Integer> c : cp){
+                System.out.print(c.size() + " ");
+            }
+            System.out.println();
+
+            /*
+                       // one_movie
             // ----------------------------------------
             startTime = System.currentTimeMillis();
 
@@ -151,6 +214,7 @@ public class real_test {
                 System.out.print(c.size() + " ");
             }
             System.out.println();
+             */
 
             // ...
         } catch (Exception e) {
