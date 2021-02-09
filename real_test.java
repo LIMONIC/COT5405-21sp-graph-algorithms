@@ -31,9 +31,10 @@ public class real_test {
             File writeName;
             long startTime, endTime;
 
+            /*
             // output user list
             try {
-                writeName = new File("user_list_1.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+                writeName = new File("user_list_1.txt");
                 writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
                 try (FileWriter writer = new FileWriter(writeName);
                      BufferedWriter out = new BufferedWriter(writer)
@@ -52,6 +53,7 @@ public class real_test {
                 e.printStackTrace();
             }
             System.out.println("User list output finished!");
+             */
 
             // Super Reviewer
             // ----------------------------------------
@@ -62,6 +64,7 @@ public class real_test {
 
             endTime = System.currentTimeMillis();
             System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
+
 
             // output the graph
             try {
@@ -93,6 +96,47 @@ public class real_test {
             }
             System.out.println();
 
+
+            // Same Data
+            // ----------------------------------------
+            startTime = System.currentTimeMillis();
+
+            System.out.println("Same Data:");
+            gm.same_data(2004,8,5);
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
+
+
+            // output the graph
+            try {
+                writeName = new File("Same_Data_graph.txt");
+                writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+                try (FileWriter writer = new FileWriter(writeName);
+                     BufferedWriter out = new BufferedWriter(writer)
+                ) {
+                    for (Integer key : gm.graph.keySet()) {
+                        List<Integer> values = gm.graph.get(key);
+                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+                    }
+                    out.flush(); // 把缓存区内容压入文件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            startTime = System.currentTimeMillis();
+            // connected components
+            cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
+            System.out.println("The number of connected components: " + cp.size());
+            System.out.print("Size of each connected component: ");
+            for(List<Integer> c : cp){
+                System.out.print(c.size() + " ");
+            }
+            System.out.println();
             /*
                        // one_movie
             // ----------------------------------------

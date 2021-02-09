@@ -21,7 +21,7 @@ public class graph_make {
     //    public static String filePath;
     public void readRatingFiles() throws Exception {
         /* read input */
-        String filePath = "assignment/ratings_data_1.txt";
+        String filePath = "assignment_data/test.txt";
         File file = new File(filePath);
 
         if (file.exists()) {
@@ -37,6 +37,7 @@ public class graph_make {
 
                     if (lineContent.toCharArray()[lineContent.length() - 1] == ':') {
                         movieId = Integer.parseInt(lineContent.substring(0, lineContent.length() - 1));
+                        movieList.putIfAbsent(movieId, new ArrayList<>());
                     } else {
                         try {
                             content = lineContent.split(",");
@@ -250,6 +251,31 @@ public class graph_make {
 
     }
 
-
+    // watched on the same day
+    public void same_data(int y, int m, int d){
+        List<Integer> adjList = new ArrayList<>();
+        for(Integer uid : customerList.keySet()){
+            Map<Integer, Rating> ml = customerList.get(uid).movieList;
+            for(Integer mid : ml.keySet()){
+                if(ml.get(mid).year == y && ml.get(mid).month == m && ml.get(mid).day == d){
+                    adjList.add(uid);
+                    break;
+                }
+            }
+        }
+        Integer[] id = adjList.toArray(new Integer[0]);
+        int id_num = adjList.size();
+        for (int i = 0; i < id_num; ++i) {
+            graph.putIfAbsent(id[i], new ArrayList<>());
+            for (int j = i + 1; j < id_num; ++j) {
+                List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
+                List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
+                adjList_i.add(id[j]);
+                adjList_j.add(id[i]);
+                graph.put(id[i], adjList_i);
+                graph.put(id[j], adjList_j);
+            }
+        }
+    }
 
 }
