@@ -36,16 +36,16 @@ public class graph_simulator {
         if (GRAPH_SIZE == 0) {
             return graph;
         }
+        Set<Integer> adjVertices = new HashSet<>();
         for (int i = 0; i < GRAPH_SIZE; i++) {
-            int vertices = i;
-            List<Integer> adjVertices = new ArrayList<>();
-            for (int j = 0; j < GRAPH_SIZE; j++) {
-                if (i == j) {
-                    continue;
-                }
-                adjVertices.addAll(Arrays.asList(j));
-            }
-            graph.put(vertices, adjVertices);
+            adjVertices.addAll(Arrays.asList(i));
+        }
+        for (int i = 0; i < GRAPH_SIZE; i++) {
+            adjVertices.remove(i);
+            List<Integer> adj = new ArrayList<>();
+            adj.addAll(adjVertices);
+            graph.put(i, adj);
+            adjVertices.add(i);
         }
         return graph;
     }
