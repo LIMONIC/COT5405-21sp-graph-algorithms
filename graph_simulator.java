@@ -36,20 +36,21 @@ public class graph_simulator {
         if (GRAPH_SIZE == 0) {
             return graph;
         }
+        Set<Integer> adjVertices = new HashSet<>();
+        for (int i = 0; i < GRAPH_SIZE; i++) {
+            adjVertices.addAll(Arrays.asList(i));
+        }
+
         for (int i = 0; i < GRAPH_SIZE; i++) {
             int vertices = i;
-            List<Integer> adjVertices = new ArrayList<>();
-            for (int j = 0; j < GRAPH_SIZE; j++) {
-                if (i == j) {
-                    continue;
-                }
-                adjVertices.addAll(Arrays.asList(j));
-            }
-            graph.put(vertices, adjVertices);
+            adjVertices.remove(vertices);
+            List<Integer> adj = new ArrayList<>();
+            adj.addAll(adjVertices);
+            graph.put(vertices, adj);
+            adjVertices.add(vertices);
         }
         return graph;
     }
-
 
     public Map<Integer, List<Integer>> emptyGraph() {
         Map<Integer,List<Integer>> graph = new HashMap<>();
@@ -144,38 +145,38 @@ public class graph_simulator {
     }
 
     public static void main(String[] args) {
-        graph_simulator gs = new graph_simulator(10);
-        Map<Integer, List<Integer>> graph1 = gs.nCycle();
+        graph_simulator gs = new graph_simulator(60000);
+//        Map<Integer, List<Integer>> graph1 = gs.nCycle();
         Map<Integer, List<Integer>> graph2 = gs.completeGraph();
-        Map<Integer, List<Integer>> graph3 = gs.emptyGraph();
-        Map<Integer, List<Integer>> graph4 = gs.heap();
-        Map<Integer, List<Integer>> graph5 = gs.truncatedHeap(2);
-        Map<Integer, List<Integer>> graph6 = gs.equivalenceModK(2);
+//        Map<Integer, List<Integer>> graph3 = gs.emptyGraph();
+//        Map<Integer, List<Integer>> graph4 = gs.heap();
+//        Map<Integer, List<Integer>> graph5 = gs.truncatedHeap(10000);
+//        Map<Integer, List<Integer>> graph6 = gs.equivalenceModK(77);
 
-        System.out.println("nCycle:");
-        for (Integer v : graph1.keySet()) {
-            System.out.println(v + "->" + graph1.get(v).toString());
-        }
+//        System.out.println("nCycle:");
+//        for (Integer v : graph1.keySet()) {
+//            System.out.println(v + "->" + graph1.get(v).toString());
+//        }
         System.out.println("completeGraph:");
-        for (Integer v : graph2.keySet()) {
-            System.out.println(v + "->" + graph2.get(v).toString());
-        }
-        System.out.println("emptyGraph:");
-        for (Integer v : graph3.keySet()) {
-            System.out.println(v + "->" + graph3.get(v).toString());
-        }
-        System.out.println("heap:");
-        for (Integer v : graph4.keySet()) {
-            System.out.println(v + "->" + graph4.get(v).toString());
-        }
-        System.out.println("truncatedHeap:");
-        for (Integer v : graph5.keySet()) {
-            System.out.println(v + "->" + graph5.get(v).toString());
-        }
-        System.out.println("equivalenceModK:");
-        for (Integer v : graph6.keySet()) {
-            System.out.println(v + "->" + graph6.get(v).toString());
-        }
+//        for (Integer v : graph2.keySet()) {
+//            System.out.println(v + "->" + graph2.get(v).toString());
+//        }
+//        System.out.println("emptyGraph:");
+//        for (Integer v : graph3.keySet()) {
+//            System.out.println(v + "->" + graph3.get(v).toString());
+//        }
+//        System.out.println("heap:");
+//        for (Integer v : graph4.keySet()) {
+//            System.out.println(v + "->" + graph4.get(v).toString());
+//        }
+//        System.out.println("truncatedHeap:");
+//        for (Integer v : graph5.keySet()) {
+//            System.out.println(v + "->" + graph5.get(v).toString());
+//        }
+//        System.out.println("equivalenceModK:");
+//        for (Integer v : graph6.keySet()) {
+//            System.out.println(v + "->" + graph6.get(v).toString());
+//        }
     }
 
 }
