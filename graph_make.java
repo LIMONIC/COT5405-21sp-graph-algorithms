@@ -9,7 +9,7 @@
 
 import java.io.*;
 import java.util.*;
-import java.lang.Object;
+import java.util.Map.Entry;
 
 public class graph_make {
 
@@ -21,7 +21,7 @@ public class graph_make {
     //    public static String filePath;
     public void readRatingFiles() throws Exception {
         /* read input */
-        String filePath = "assignment_data/test.txt";
+        String filePath = "assignment/ratings_data_1.txt";
         File file = new File(filePath);
 
         if (file.exists()) {
@@ -212,11 +212,32 @@ public class graph_make {
         }
     }
 
+    /* Comparator */
+    class MyComparatorBigtoSmall implements Comparator<Double> {
+        @Override
+        public int compare(Double o1, Double o2) {
+            if (o2 > o1)
+                return 1;
+            else
+                return 0;
+        }
+    }
+
+    class MyComparatorSmalltoBig implements Comparator<Integer> {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            if (o2 < o1)
+                return 1;
+            else
+                return 0;
+        }
+    }
+
     // Top k movies
     // ----------------------------------
     public void top_k_movie(int k) {
         graph.clear();
-        Map<Double, Integer> ave_score = new TreeMap<>();
+        Map<Double, Integer> ave_score = new TreeMap<>(new MyComparatorBigtoSmall());
         for (Integer mid : movieList.keySet()) {
             double ave = 0;
             for (user u : movieList.get(mid)) {
@@ -276,6 +297,53 @@ public class graph_make {
                 graph.put(id[j], adjList_j);
             }
         }
+    }
+
+    // Coldest Movie
+    // ----------------------------
+    public void coldest_movies() {
+        graph.clear();
+
+        // graph initialization
+        for (Integer key : customerList.keySet()) {
+            graph.putIfAbsent(key, new ArrayList<>());
+        }
+
+        Map<Integer, Integer> c_num = new TreeMap<>(new MyComparatorSmalltoBig());
+        for (Integer mid : movieList.keySet()) {
+            int num = movieList.get(mid).size();
+            c_num.put(mid, num);
+        }
+
+        List<Entry<Integer, Integer>> list = new ArrayList<Entry<Integer, Integer>>(c_num.entrySet());
+
+        Collections.sort(list,new Comparator<Map.Entry<Integer,Integer>>() {
+            //升序排序
+            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }});
+
+        // connect customers in the coldest N movies respectively
+
+        List<Integer> graph_list = new ArrayList<Integer>();
+        for(user uid : movieList.get(list.get(0).getKey()))
+        {
+            graph_list.add(uid.id);
+        }
+        Integer[] id = graph_list.toArray(new Integer[0]);
+        int id_num = graph_list.size();
+        for (int i = 0; i < id_num; ++i) {
+            graph.putIfAbsent(id[i], new ArrayList<>());
+            for (int j = i + 1; j < id_num; ++j) {
+                List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
+                List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
+                adjList_i.add(id[j]);
+                adjList_j.add(id[i]);
+                graph.put(id[i], adjList_i);
+                graph.put(id[j], adjList_j);
+            }
+        }
+
     }
 
 }

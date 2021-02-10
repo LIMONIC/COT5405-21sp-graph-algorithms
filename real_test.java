@@ -30,11 +30,13 @@ public class real_test {
             graph_operations op = new graph_operations();
             File writeName;
             long startTime, endTime;
+            Runtime runtime;
+            long memory;
 
             /*
-            // output user list
+             // output user list
             try {
-                writeName = new File("user_list_1.txt");
+                writeName = new File("user_list_1.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
                 writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
                 try (FileWriter writer = new FileWriter(writeName);
                      BufferedWriter out = new BufferedWriter(writer)
@@ -55,16 +57,17 @@ public class real_test {
             System.out.println("User list output finished!");
              */
 
-            // Super Reviewer
+
+            /*
+                        // Super Reviewer
             // ----------------------------------------
             startTime = System.currentTimeMillis();
 
             System.out.println("Super Reviewer:");
-            gm.super_reviewer(265);
+            gm.super_reviewer(500);
 
             endTime = System.currentTimeMillis();
             System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
-
 
             // output the graph
             try {
@@ -96,21 +99,27 @@ public class real_test {
             }
             System.out.println();
 
+            runtime = Runtime.getRuntime();
+            runtime.gc();
+            // Calculate the used memory
+            memory = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Used memory is bytes: " + memory);
+             */
 
-            // Same Data
+            /*
+                        // Same Day
             // ----------------------------------------
             startTime = System.currentTimeMillis();
 
             System.out.println("Same Data:");
-            gm.same_data(2004,8,5);
+            gm.same_data(2004, 8,4);
 
             endTime = System.currentTimeMillis();
             System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
 
-
             // output the graph
             try {
-                writeName = new File("Same_Data_graph.txt");
+                writeName = new File("Same_Data_graph_1_2004_8_4.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
                 writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
                 try (FileWriter writer = new FileWriter(writeName);
                      BufferedWriter out = new BufferedWriter(writer)
@@ -127,7 +136,7 @@ public class real_test {
 
             startTime = System.currentTimeMillis();
             // connected components
-            cp = op.connected_components(gm.graph);
+            List<List<Integer>> cp = op.connected_components(gm.graph);
             endTime = System.currentTimeMillis();
             System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
 
@@ -137,6 +146,108 @@ public class real_test {
                 System.out.print(c.size() + " ");
             }
             System.out.println();
+
+            runtime = Runtime.getRuntime();
+            runtime.gc();
+            // Calculate the used memory
+            memory = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Used memory is bytes: " + memory);
+             */
+
+            /*
+                        // Top k movie
+            // ----------------------------------------
+            startTime = System.currentTimeMillis();
+
+            System.out.println("Top_k_Movie:");
+            gm.top_k_movie(1);
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
+
+            // output the graph
+            try {
+                writeName = new File("Top_k_Movie_1_1st.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+                writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+                try (FileWriter writer = new FileWriter(writeName);
+                     BufferedWriter out = new BufferedWriter(writer)
+                ) {
+                    for (Integer key : gm.graph.keySet()) {
+                        List<Integer> values = gm.graph.get(key);
+                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+                    }
+                    out.flush(); // 把缓存区内容压入文件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            startTime = System.currentTimeMillis();
+            // connected components
+            List<List<Integer>> cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
+            System.out.println("The number of connected components: " + cp.size());
+            System.out.print("Size of each connected component: ");
+            for(List<Integer> c : cp){
+                System.out.print(c.size() + " ");
+            }
+            System.out.println();
+
+            runtime = Runtime.getRuntime();
+            runtime.gc();
+            // Calculate the used memory
+            memory = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Used memory is bytes: " + memory);
+             */
+
+            // Coldest N movies
+            // ----------------------------------------
+            startTime = System.currentTimeMillis();
+
+            System.out.println("coldest_movies:");
+            gm.coldest_movies();
+
+            endTime = System.currentTimeMillis();
+            System.out.println("graph construction running time： "+(endTime-startTime)+"ms");
+
+            // output the graph
+            try {
+                writeName = new File("coldest_movies_1_2.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+                writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+                try (FileWriter writer = new FileWriter(writeName);
+                     BufferedWriter out = new BufferedWriter(writer)
+                ) {
+                    for (Integer key : gm.graph.keySet()) {
+                        List<Integer> values = gm.graph.get(key);
+                        out.write(key + ":" + StringUtils.strip(values.toString(),"[]") + "\r\n");
+                    }
+                    out.flush(); // 把缓存区内容压入文件
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            startTime = System.currentTimeMillis();
+            // connected components
+            List<List<Integer>> cp = op.connected_components(gm.graph);
+            endTime = System.currentTimeMillis();
+            System.out.println("connected_components running time： "+(endTime-startTime)+"ms");
+
+            System.out.println("The number of connected components: " + cp.size());
+            System.out.print("Size of each connected component: ");
+            for(List<Integer> c : cp){
+                System.out.print(c.size() + " ");
+            }
+            System.out.println();
+
+            runtime = Runtime.getRuntime();
+            runtime.gc();
+            // Calculate the used memory
+            memory = runtime.totalMemory() - runtime.freeMemory();
+            System.out.println("Used memory is bytes: " + memory);
+
             /*
                        // one_movie
             // ----------------------------------------
