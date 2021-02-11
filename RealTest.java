@@ -54,7 +54,7 @@ public class RealTest {
 
     public static void main(String[] args) {
         RealTest rt = new RealTest();
-        rt.readGraph("superReviewer.txt");
+        rt.readGraph("oneMovieInCommon.txt");
         graph_operations go = new graph_operations();
 
         long startTime = System.currentTimeMillis();
@@ -63,7 +63,10 @@ public class RealTest {
         System.out.println("connected_components running time： " + (endTime - startTime) + "ms");
 
         System.out.println("The number of connected components: " + connectedComponents.size());
-//        System.out.print("Size of each connected component: ");
+        System.out.print("Size of each connected component: ");
+        for(List<Integer> c : connectedComponents){
+            System.out.print(c.size() + " ");
+        }
 //        System.out.print("print connected component: ");
 //        for (List<Integer> c : connectedComponents) {
 //            if (c.size() > 1) {

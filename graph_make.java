@@ -13,13 +13,13 @@ public class graph_make {
 
     Map<Integer, Customer> customerList;
     Map<Integer, List<Integer>> graph;
-
     Map<Integer, List<user>> movieList = new HashMap<>();
 
     public static void main(String[] args) throws Exception {
         graph_make gm = new graph_make();
-        gm.readRatingFiles();
-        gm.superReviewer();
+//        gm.readRatingFiles();
+//        gm.superReviewer();
+        gm.oneMovieInCommon();
     }
 
     /**
@@ -124,15 +124,16 @@ public class graph_make {
         }
     }
 
+
     public void writeGraph(String name) {
-        System.out.println("Starting writing graph " + name + "...");
+        System.out.println("Start writing graph " + name + "...");
         FileWriter writer;
         try {
-            writer = new FileWriter(name+".txt");
+            writer = new FileWriter(name + ".txt");
             for (Integer customer : graph.keySet()) {
                 List<Integer> adjCustomers = graph.get(customer);
                 String adjCustomersString = adjCustomers.toString();
-                writer.write(customer + ": " + adjCustomersString.substring(1,adjCustomersString.length() - 1)+"\r\n");
+                writer.write(customer + ": " + adjCustomersString.substring(1, adjCustomersString.length() - 1) + "\r\n");
 
             }
             writer.flush();
@@ -140,34 +141,131 @@ public class graph_make {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Finished!");
     }
 
 
-    // one movie in common
-    public void one_movie() {
-        graph = new HashMap<>();
-        Integer[] id = customerList.keySet().toArray(new Integer[0]);
-        int id_num = customerList.keySet().size();
-        for (int i = 0; i < id_num; ++i) {
-            graph.putIfAbsent(id[i], new ArrayList<>());
-            Map<Integer, Rating> ml_i = new HashMap<>(customerList.get(id[i]).movieList);
-            for (int j = i + 1; j < id_num; ++j) {
-                Map<Integer, Rating> ml_j = new HashMap<>(customerList.get(id[j]).movieList);
-                Set<Integer> im = new HashSet<>(ml_i.keySet());
-                Set<Integer> jm = new HashSet<>(ml_j.keySet());
-                im.retainAll(jm);
-                // If two customers have rated one movie in common, they are adjacent
-                if (im.size() != 0) {
-                    List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
-                    List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
-                    adjList_i.add(id[j]);
-                    adjList_j.add(id[i]);
-                    graph.put(id[i], adjList_i);
-                    graph.put(id[j], adjList_j);
+    /**
+     * @MethodName: oneMovieInCommon
+     * @Param: []
+     * @Return: void
+     * @Description: This method output a graph in which all vertices are connected when they at least watched one movie in common.
+     * Implement union-find to reduce tree height in order to avoid stack over flow in other DFS algorithms.
+     */
+    public void oneMovieInCommon() {
+        Map<Integer, Set<Integer>> movieToCustomer = new HashMap<>();
+        Set<Integer> customerSet = new HashSet<>();
+
+        for (int i = 1; i < 5; i++) {
+            String filePath = "assignment1-data/ratings_data_" + i + ".txt";
+            System.out.println("Start Reading file: " + filePath);
+            File file = new File(filePath);
+            if (file.exists()) {
+                try {
+                    FileReader fileReader = new FileReader(file);
+                    BufferedReader br = new BufferedReader(fileReader);
+                    String lineContent = null;
+                    String[] content;
+                    int movieId = 0;
+
+                    while ((lineContent = br.readLine()) != null) {
+                        if (lineContent.toCharArray()[lineContent.length() - 1] == ':') {
+                            movieId = Integer.parseInt(lineContent.substring(0, lineContent.length() - 1));
+                            if (movieId % 1000 == 0) {
+                                System.out.println(movieId + " movies have been read.");
+                            }
+                        } else {
+                            try {
+                                content = lineContent.split(",");
+                                if (content.length != 3) {
+                                    throw new Exception();
+                                }
+                                int customerID = Integer.parseInt(content[0]);
+                                customerSet.add(customerID);
+                                Set<Integer> customers = movieToCustomer.getOrDefault(movieId, new HashSet<>());
+                                customers.add(customerID);
+                                movieToCustomer.put(movieId, customers);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    br.close();
+                    fileReader.close();
+                } catch (FileNotFoundException e) {
+                    System.out.println("file not found!");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    System.out.println("io exception");
+                    e.printStackTrace();
                 }
             }
         }
+
+        System.out.println("Start build oneMovieInCommon graph...");
+        // use union find to construct graph
+        Map<Integer, Integer> father = new HashMap<>();
+        initUnionFind(customerSet, father);
+        for (int movieId : movieToCustomer.keySet()) {
+            Set<Integer> adjCustomers = movieToCustomer.get(movieId);
+            int parent = -1;
+            for (int c : adjCustomers) {
+                if (parent == -1) {
+                    parent = find(c, father);
+                } else {
+                    assert parent > -1 : "Parent not initialized!";
+                    join(c, parent, father);
+                }
+            }
+        }
+
+        // generate formatted graph
+        graph = new HashMap<>();
+        for (int customerId : father.keySet()) {
+            int parent = father.get(customerId);
+            if (parent == customerId) {
+                graph.put(customerId, new ArrayList<>());
+            } else {
+                List<Integer> neighbors = graph.getOrDefault(customerId, new ArrayList<>());
+                List<Integer> parentNeighbors = graph.getOrDefault(parent, new ArrayList<>());
+                neighbors.add(parent);
+                parentNeighbors.add(customerId);
+                graph.put(customerId, neighbors);
+                graph.put(parent, parentNeighbors);
+            }
+        }
+        System.out.println("oneMovieInCommon graph created!");
+        writeGraph("oneMovieInCommon");
     }
+
+    private void initUnionFind(Set<Integer> customerSet, Map<Integer, Integer> father) {
+        // all node point to itself.
+        for (int key : customerSet) {
+            father.put(key, key);
+        }
+    }
+
+    private int find(int x, Map<Integer, Integer> father) {
+        int root = x;
+        while (father.get(root) != root) {
+            root = father.get(root);
+        }
+        while (x != root) {
+            int fx = father.get(x);
+            father.put(x, root);
+            x = fx;
+        }
+        return root;
+    }
+
+    private void join(int x, int y, Map<Integer, Integer> father) {
+        int fx = find(x, father);
+        int fy = find(y, father);
+        if (fx != fy) {
+            father.put(fx, fy);
+        }
+    }
+
 
     // 3 ratings in common
     public void three_ratings() {
@@ -283,7 +381,6 @@ public class graph_make {
                     graph.put(customerId, neighbors);
                     graph.put(regularReviewer, inactiveReviewerNeighbors);
                 }
-
             } else {
                 if (!sr) {
                     superReviewer = customerId;
@@ -300,8 +397,10 @@ public class graph_make {
                 }
             }
         }
+        System.out.println("superReviewer graph created!");
         writeGraph("superReviewer");
     }
+
 
     // Top k movies
     // ----------------------------------
