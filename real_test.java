@@ -27,8 +27,8 @@ public class real_test {
 //                System.out.println("Too many arguments!");
 //            }
 //            filePath = args[0];
-            graph_make gm = new graph_make();
-            gm.readRatingFiles();
+            GraphMake gm = new GraphMake();
+//            gm.readRatingFiles();
             graph_operations op = new graph_operations();
             File writeName;
             long startTime, endTime;
