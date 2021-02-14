@@ -32,13 +32,39 @@ The performance of the programs are instrumented by run-time and memory consumpt
 ## Class Structure
 
 ### GraphOperation
-*connectedComponents():* 
+*connected_components():* using depth-First search to return the list of connected components.
 
+*one_cycle():* using depth-First search to return a cycle, or an empty list.
+
+*shortest_paths():* using Dijkstra's algorithm and returns a map of the shortest paths.
 ### GraphSimulator
+*nCycle():* An n-cycle: The vertices are integers from 0 through n - 1. The vertices u and v are connected by an edge if u - v = ±1 or u - v = ± (n - 1). There is one connected component, every shortest path has length at most n=2, and there is a unique cycle of length n.
 
+*completeGraph():* The vertices are integers from 0 through n-1. Every pair of distinct vertices forms an edge. There is one connected component, every shortest path has unit length, and there are many cycles.
+
+*emptyGraph():* An empty graph on n vertices: The vertices are integers from 0 through n - 1. There are no edges. There are n connected components, no paths, and no cycles.
+
+*heap():* A heap: The vertices are integers from 0 through n - 1. The neighbors of a vertex v are (v - 1)/2, 2v + 1, and 2v + 2, provided those numbers are in the range for vertices. There is one connected component, the paths are short, and there are no cycles.
+
+*truncatedHeap():* A truncated heap: The vertices are integers from m through n - 1. The edge relationship is the same as for the heap. There are n - 1 - 2m edges, m+ 1 connected components, and no cycles. The paths, when they exist, are short.
+
+*equivalenceModK():* Equivalence mod k: The vertices are integers from 0 to n - 1, where k <= n. The vertices u and v are connected by an edge if u - v is evenly divisible by k. There are k components, and each component is a complete graph.
 ### SimulatedTest
+*connectedComponentExp():* Perform experiment of connected components on a selected graph.
 
+*oneCycleExp():* Perform experiment of find cycle on a selected graph.
+
+*shortestPathExp():* Perform experiment of the shortest path on a selected graph. The start point are randomly selected from graph key set.
 ### GraphMake
+*readRatingFiles():* Read data file and format it into adjacency list.
+
+*writeCustomerList():* Output a txt file named "customerList.txt" that contains all customer ID.
+
+*writeGraph():* Output a txt file with given name that contains the structure of the graph. graph represented by adjacency list.
+
+*oneMovieInCommon():* This method output a graph in which all vertices are connected when they at least watched one movie in common. Implement union-find to reduce tree height in order to avoid stack over flow in other DFS algorithms.
+
+*superReviewer():* This method output a graph, in which all vertices are connected based on number of their comment. 4 tires are applied. Top 10% of users with the highest number of comments are considered as "Super reviewer", top 10% - 30% of users with the highest number of comments are considered as "Active Reviewer", top 30% - 60% of users with the highest number of comments are considered as "Regular Reviewer", last 40% of users with the lowest number of comments are considered as "Inactive Reviewer". The average number of comments per user is 209.
 
 ### RealTest
 
@@ -51,10 +77,18 @@ The performance of the programs are instrumented by run-time and memory consumpt
 ## Requirement
 
 ## Usage
-
+* ### simulated_test.java
 ```bush
-
+> [Graph_size] [Method: 1 - 6]
 ```
+1. N Cycle
+2. Complete graph
+3. Empty graph
+4. Heap
+5. Truncated heap
+6. Equivalence mod K
+* ### real_test.java
+
 ## Credit
 
 ## License

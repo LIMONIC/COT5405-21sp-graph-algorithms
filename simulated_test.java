@@ -19,13 +19,13 @@ public class simulated_test {
      *              Performance and results are written in txt files;
     */
     public static void main(String[] args) {
-        // [Graph_size] [method_name] [if output]
+        // [Graph_size] [method_name]
         int graphSize;
         int method;
-        boolean output = false;
+
         try {
             System.out.println("This class generates graph with simulated data and run test the methods in graph_operation.");
-            if (args.length == 3) {
+            if (args.length == 2) {
                 graphSize = Integer.parseInt(args[0]);
                 method = Integer.parseInt(args[1]);
 
@@ -80,14 +80,14 @@ public class simulated_test {
                 break;
             case 5:
                 name = "truncatedHeap";
-                graph = gs.truncatedHeap(2);
+                graph = gs.truncatedHeap(graphSize * 3 / 10);
                 st.connectedComponentExp(name, graph);
                 st.oneCycleExp(name, graph);
                 st.shortestPathExp(name, graph);
                 break;
             case 6:
                 name = "equivalenceModK";
-                graph = gs.equivalenceModK(2);
+                graph = gs.equivalenceModK(graphSize * 3 / 10);
                 st.connectedComponentExp(name, graph);
                 st.oneCycleExp(name, graph);
                 st.shortestPathExp(name, graph);
@@ -136,6 +136,7 @@ public class simulated_test {
             e.printStackTrace();
         }
         System.out.println("Finished!");
+        System.out.println("--------------");
     }
 
     /**
@@ -167,11 +168,11 @@ public class simulated_test {
             writer = new FileWriter(name + "_oneCycle.txt");
             writer.write("Run time of one_cycle() (microsecond): " + ((stopTime - startTime) / 10 / 1000) + "\r\n");
             writer.write("Used memory is " + memory + " bytes." + "\r\n");
-            if (cycle.size() == 1) {
+            if (cycle.size() != 0) {
                 writer.write(cycle.toString() + "\r\n");
             } else {
                 writer.write("No cycle found!" + "\r\n");
-                System.out.println("No cycle found!" + "\r\n");
+                System.out.println("No cycle found!");
             }
             writer.flush();
             writer.close();
@@ -179,6 +180,7 @@ public class simulated_test {
             e.printStackTrace();
         }
         System.out.println("Finished!");
+        System.out.println("--------------");
     }
 
     /**
@@ -193,9 +195,10 @@ public class simulated_test {
         // get runtime
         long startTime, stopTime;
         startTime = System.nanoTime();
-        ArrayList<Integer> mapKey = new ArrayList();
+        List<Integer> mapKeyList = new ArrayList<>();
+        mapKeyList.addAll(graph.keySet());
         Random R = new Random();
-        int s = mapKey.get(R.nextInt(mapKey.size()));
+        int s = mapKeyList.get(R.nextInt(mapKeyList.size()));
         shortestPath = go.shortest_paths(s, graph);
         stopTime = System.nanoTime();
         System.out.println("Run time of shortest_paths() (microsecond): " + ((stopTime - startTime) / 10 / 1000));
@@ -224,6 +227,8 @@ public class simulated_test {
             e.printStackTrace();
         }
         System.out.println("Finished!");
+        System.out.println("--------------");
+
     }
 
 

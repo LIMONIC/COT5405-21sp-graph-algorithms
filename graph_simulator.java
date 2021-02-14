@@ -8,6 +8,12 @@ public class graph_simulator {
         this.GRAPH_SIZE = size;
     }
 
+    /**
+    * @MethodName: nCycle
+    * @Param: []
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: An n-cycle: The vertices are integers from 0 through n - 1. The vertices u and v are connected by an edge if u - v = ±1 or u - v = ± (n - 1). There is one connected component, every shortest path has length at most n=2, and there is a unique cycle of length n.
+    */
     public Map<Integer, Set<Integer>> nCycle() {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (GRAPH_SIZE == 0) {
@@ -30,6 +36,12 @@ public class graph_simulator {
         return graph;
     }
 
+    /**
+    * @MethodName: completeGraph
+    * @Param: []
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: The vertices are integers from 0 through n-1. Every pair of distinct vertices forms an edge. There is one connected component, every shortest path has unit length, and there are many cycles.
+    */
     public Map<Integer, Set<Integer>> completeGraph() {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (GRAPH_SIZE == 0) {
@@ -49,6 +61,12 @@ public class graph_simulator {
         return graph;
     }
 
+    /**
+    * @MethodName: emptyGraph
+    * @Param: []
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: An empty graph on n vertices: The vertices are integers from 0 through n - 1. There are no edges. There are n connected components, no paths, and no cycles.
+    */
     public Map<Integer, Set<Integer>> emptyGraph() {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (GRAPH_SIZE == 0) {
@@ -60,6 +78,12 @@ public class graph_simulator {
         return graph;
     }
 
+    /**
+    * @MethodName: heap
+    * @Param: []
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: A heap: The vertices are integers from 0 through n - 1. The neighbors of a vertex v are (v - 1)/2, 2v + 1, and 2v + 2, provided those numbers are in the range for vertices. There is one connected component, the paths are short, and there are no cycles.
+    */
     public Map<Integer, Set<Integer>> heap() {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (GRAPH_SIZE == 0) {
@@ -95,6 +119,12 @@ public class graph_simulator {
         return graph;
     }
 
+    /**
+    * @MethodName: truncatedHeap
+    * @Param: [int]
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: A truncated heap: The vertices are integers from m through n - 1. The edge relationship is the same as for the heap. There are n - 1 - 2m edges, m+ 1 connected components, and no cycles. The paths, when they exist, are short.
+    */
     public Map<Integer, Set<Integer>> truncatedHeap(int m) {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (GRAPH_SIZE == 0) {
@@ -120,6 +150,12 @@ public class graph_simulator {
         return graph;
     }
 
+    /**
+    * @MethodName: equivalenceModK
+    * @Param: [int]
+    * @Return: java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>
+    * @Description: Equivalence mod k: The vertices are integers from 0 to n - 1, where k <= n. The vertices u and v are connected by an edge if u - v is evenly divisible by k. There are k components, and each component is a complete graph.
+    */
     public Map<Integer, Set<Integer>> equivalenceModK(int k) {
         Map<Integer, Set<Integer>> graph = new HashMap<>();
         if (k > GRAPH_SIZE) {

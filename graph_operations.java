@@ -46,7 +46,7 @@ public class graph_operations {
      * @MethodName: one_cycle
      * @Param: [Map<Int, Set < Integer>>]
      * @Return: [List<Integer>]
-     * @Description: useing depth-First search to return a cycle, or an empty list.
+     * @Description: using depth-First search to return a cycle, or an empty list.
      */
     public List<Integer> one_cycle(Map<Integer, Set<Integer>> graph) {
         List<Integer> result = new ArrayList<>();
@@ -123,7 +123,7 @@ public class graph_operations {
         result.put(s, list);
         dist.replace(s - 1, 0);
 
-        while (visited.size() != gSize) {
+        while (visited.size() != gSize && !pq.isEmpty()) {
             int v = pq.remove().getID();
             visited.add(v);
             getPath(v, visited, dist, pq, result, graph);
@@ -173,12 +173,15 @@ public class graph_operations {
             this.id = id;
             this.dis = dis;
         }
+
         public Integer getDis() {
             return dis;
         }
+
         public Integer getID() {
             return id;
         }
+
         @Override
         public int compare(Vertex v1, Vertex v2) {
             if (v1.dis < v2.dis)
