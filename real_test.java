@@ -3,7 +3,7 @@ import java.util.*;
 
 public class real_test {
 
-    Map<Integer, List<Integer>> graph;
+    Map<Integer, Set<Integer>> graph;
 
     public static void main(String[] args) {
         try {
@@ -27,7 +27,7 @@ public class real_test {
 //                System.out.println("Too many arguments!");
 //            }
 //            filePath = args[0];
-            GraphMake gm = new GraphMake();
+            graph_make gm = new graph_make();
 //            gm.readRatingFiles();
             graph_operations op = new graph_operations();
             File writeName;
@@ -209,7 +209,7 @@ public class real_test {
             startTime = System.currentTimeMillis();
 
             System.out.println("coldest_movies:");
-            gm.coldest_movies();
+            //gm.coldest_movies();
 
             endTime = System.currentTimeMillis();
             System.out.println("graph construction running time： " + (endTime - startTime) + "ms");
@@ -220,8 +220,8 @@ public class real_test {
                 writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
                 FileWriter writer = new FileWriter(writeName);
                 for (Integer key : gm.graph.keySet()) {
-                    List<Integer> values = gm.graph.get(key);
-                    Collections.sort(values);
+                    Set<Integer> values = gm.graph.get(key);
+                    //Collections.sort(values);
 //                System.out.println("key: " + key + ", value: " + values.toString());
                     String movieListString = values.toString();
                     writer.write(key + ": " + movieListString.substring(1, movieListString.length() - 1) + "\r\n");
@@ -406,7 +406,7 @@ public class real_test {
                         int customerID = Integer.parseInt(content[0]);
                         adjCustomerString = content[1].split(", ");
 
-                        List<Integer> adjCustomer = graph.getOrDefault(customerID, new ArrayList<>());
+                        Set<Integer> adjCustomer = graph.getOrDefault(customerID, new HashSet<>());
                         for (String s : adjCustomerString) {
                             int id = Integer.parseInt(s);
                             adjCustomer.add(id);

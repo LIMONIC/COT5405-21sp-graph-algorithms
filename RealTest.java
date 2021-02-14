@@ -8,7 +8,7 @@ public class RealTest {
     Map<Integer, List<Integer>> graph;
 
     public static void main(String[] args) {
-        RealTest rt = new RealTest();
+        real_test rt = new real_test();
         rt.readGraph("superReviewer.txt");
         graph_operations go = new graph_operations();
 

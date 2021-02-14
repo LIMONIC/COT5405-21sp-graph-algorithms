@@ -13,16 +13,64 @@ public class graph_make {
     Map<Integer, Customer> customerList;
     Map<Integer, Set<Integer>> graph;
 
+    public static void main(String[] args) throws Exception {
+        int option = 1;
+        String filePath = "assignment1-data/";
+        try {
+            System.out.println("This class generates graph and outputs a txt file.");
+            if (args.length < 1) {
+                System.out.println("The Input File name is not specified!");
+                System.out.println("This class take file path as argument.");
+                return;
+            } else if (args.length == 1) {
+                filePath = args[0];
+                File file = new File(filePath);
+                if (!file.exists()) {
+                    System.out.println("File not exist! Check your input.");
+                }
+            } else if (args.length > 1) {
+                System.out.println("Too many arguments!");
+            }
+            System.out.println("Options: ");
+            System.out.println("\t1: At least watched one movie in common");
+            System.out.println("\t2: Super reviewer vs inactive reviewer");
+            System.out.println("\t3: ...");
+            System.out.println("\t4: ...");
+            System.out.println("Your input:");
+            Scanner in = new Scanner(System.in);
+            option = in.nextInt();
+        } catch (Exception e) {
+            System.out.println("Error");
+            return;
+        }
+        GraphMake gm = new GraphMake();
+        switch (option) {
+            case 1:
+                gm.oneMovieInCommon(filePath);
+                break;
+            case 2:
+                gm.readRatingFiles(filePath);
+                gm.superReviewer();
+                break;
+            case 3:
+                // ...
+                break;
+            default:
+                System.out.println("Option dose not exist!");
+        }
+    }
+
+
     /**
      * @MethodName: readRatingFiles
      * @Param: []
      * @Return: void
      * @Description: Read data files
      */
-    public void readRatingFiles() throws Exception {
+    public void readRatingFiles(String path) throws Exception {
         customerList = new HashMap<>();
-        for (int i = 1; i < 2; i++) {
-            String filePath = "assignment/ratings_data_" + i + ".txt";
+        for (int i = 1; i < 5; i++) {
+            String filePath = path + "ratings_data_" + i + ".txt";
             System.out.println("Start Reading file: " + filePath);
             File file = new File(filePath);
             if (file.exists()) {
@@ -100,7 +148,7 @@ public class graph_make {
      * @MethodName: writeGraph
      * @Param: [String]
      * @Return: void
-     * @Description: Output a txt file with given name that contains the structure of the graph.
+     * @Description: Output a txt file with given name that contains the structure of the graph. graph represented by adjacency list.
      */
     public void writeGraph(String name) {
         System.out.println("Start writing graph " + name + "...");
@@ -129,12 +177,12 @@ public class graph_make {
      * @Description: This method output a graph in which all vertices are connected when they at least watched one movie in common.
      * Implement union-find to reduce tree height in order to avoid stack over flow in other DFS algorithms.
      */
-    public void oneMovieInCommon() {
+    public void oneMovieInCommon(String path) {
         Map<Integer, Set<Integer>> movieToCustomer = new HashMap<>();
         Set<Integer> customerSet = new HashSet<>();
 
         for (int i = 1; i < 5; i++) {
-            String filePath = "assignment1-data/ratings_data_" + i + ".txt";
+            String filePath = path + "ratings_data_" + i + ".txt";
             System.out.println("Start Reading file: " + filePath);
             File file = new File(filePath);
             if (file.exists()) {
@@ -215,6 +263,12 @@ public class graph_make {
         writeGraph("oneMovieInCommon");
     }
 
+    /**
+     * @MethodName: initUnionFind
+     * @Param: [java.util.Set<java.lang.Integer>, java.util.Map<java.lang.Integer,java.lang.Integer>]
+     * @Return: void
+     * @Description: Initialize a map that storing a key and its father node. All father nodes are set to the key in the beginning.
+     */
     private void initUnionFind(Set<Integer> customerSet, Map<Integer, Integer> father) {
         // all node point to itself.
         for (int key : customerSet) {
@@ -222,6 +276,12 @@ public class graph_make {
         }
     }
 
+    /**
+     * @MethodName: find
+     * @Param: [int, java.util.Map<java.lang.Integer,java.lang.Integer>]
+     * @Return: int
+     * @Description: Find the root of current connected component. Once found the root, compressing the path by connecting current vertex directly to the root.
+     */
     private int find(int x, Map<Integer, Integer> father) {
         int root = x;
         while (father.get(root) != root) {
@@ -235,6 +295,12 @@ public class graph_make {
         return root;
     }
 
+    /**
+     * @MethodName: join
+     * @Param: [int, int, java.util.Map<java.lang.Integer,java.lang.Integer>]
+     * @Return: void
+     * @Description: This method connect two vertices by concatenating the root of those two vertices.
+     */
     private void join(int x, int y, Map<Integer, Integer> father) {
         int fx = find(x, father);
         int fy = find(y, father);
@@ -326,60 +392,73 @@ public class graph_make {
      * @Param: [int]
      * @Return: void
      * @Description: This method output a graph, in which all vertices are connected based on number of their comment.
-     * 3 tires are applied. The average number of comments per user is 209.
+     * 4 tires are applied. Top 10% of users with the highest number of comments are considered as "Super Reviewer", top 10% - 30% of users with the highest number of comments are considered as "Active Reviewer",
+     * Top 30% - 60% of users with the highest number of comments are considered as "Regular Reviewer", last 40% of users with the lowest number of comments are considered as "Inactive Reviewer".
+     * The average number of comments per user is 209.
      */
     public void superReviewer() {
         System.out.println("Start create superReviewer graph...");
         graph = new HashMap<>();
-        int superReviewer = -1, regularReviewer = -1, inactiveReviewer = -1;
-        boolean sr = false, rr = false, ir = false;
+        int maxCommentsNum = Integer.MIN_VALUE;
+        for (int customer : customerList.keySet()) {
+            maxCommentsNum = Math.max(maxCommentsNum, customerList.get(customer).movieList.size());
+        }
 
+        int superReviewer = -1, activeReviewer = -1, regularReviewer = -1, inactiveReviewer = -1;
+        boolean q1 = false, q2 = false, q3 = false, q4 = false;
+
+        // use union find to construct graph
+        Map<Integer, Integer> father = new HashMap<>();
+        initUnionFind(customerList.keySet(), father);
         for (Integer customerId : customerList.keySet()) {
             int numOfMovieViewed = customerList.get(customerId).movieList.size();
-            if (numOfMovieViewed < 100) {
-                if (!ir) {
-                    inactiveReviewer = customerId;
-                    graph.put(inactiveReviewer, new HashSet<>());
-                    ir = true;
+            if (numOfMovieViewed < maxCommentsNum * 0.1) {
+                if (inactiveReviewer == -1) {
+                    inactiveReviewer = find(customerId, father);
                 } else {
                     assert inactiveReviewer > -1 : "inactiveReviewer not initialized!";
-                    Set<Integer> neighbors = graph.getOrDefault(customerId, new HashSet<>());
-                    Set<Integer> inactiveReviewerNeighbors = graph.get(inactiveReviewer);
-                    neighbors.add(inactiveReviewer);
-                    inactiveReviewerNeighbors.add(customerId);
-                    graph.put(customerId, neighbors);
-                    graph.put(inactiveReviewer, inactiveReviewerNeighbors);
+                    join(customerId, inactiveReviewer, father);
                 }
-            } else if (100 <= numOfMovieViewed && numOfMovieViewed < 300) {
-                if (!rr) {
-                    regularReviewer = customerId;
-                    graph.put(regularReviewer, new HashSet<>());
-                    rr = true;
+            } else if (maxCommentsNum * 0.1 <= numOfMovieViewed && numOfMovieViewed < maxCommentsNum * 0.3) {
+                if (regularReviewer == -1) {
+                    regularReviewer = find(customerId, father);
                 } else {
                     assert regularReviewer > -1 : "regularReviewer not initialized!";
-                    Set<Integer> neighbors = graph.getOrDefault(customerId, new HashSet<>());
-                    Set<Integer> inactiveReviewerNeighbors = graph.get(regularReviewer);
-                    neighbors.add(regularReviewer);
-                    inactiveReviewerNeighbors.add(customerId);
-                    graph.put(customerId, neighbors);
-                    graph.put(regularReviewer, inactiveReviewerNeighbors);
+                    join(customerId, regularReviewer, father);
+                }
+            } else if (maxCommentsNum * 0.3 <= numOfMovieViewed && numOfMovieViewed < maxCommentsNum * 0.6) {
+                if (activeReviewer == -1) {
+                    activeReviewer = find(customerId, father);
+                } else {
+                    assert activeReviewer > -1 : "activeReviewer not initialized!";
+                    join(customerId, activeReviewer, father);
                 }
             } else {
-                if (!sr) {
-                    superReviewer = customerId;
-                    graph.put(superReviewer, new HashSet<>());
-                    sr = true;
+                if (superReviewer == -1) {
+                    superReviewer = find(customerId, father);
                 } else {
                     assert superReviewer > -1 : "superReviewer not initialized!";
-                    Set<Integer> neighbors = graph.getOrDefault(customerId, new HashSet<>());
-                    Set<Integer> inactiveReviewerNeighbors = graph.get(superReviewer);
-                    neighbors.add(superReviewer);
-                    inactiveReviewerNeighbors.add(customerId);
-                    graph.put(customerId, neighbors);
-                    graph.put(superReviewer, inactiveReviewerNeighbors);
+                    join(customerId, superReviewer, father);
                 }
             }
         }
+
+        // generate formatted graph
+        graph = new HashMap<>();
+        for (int customerId : father.keySet()) {
+            int parent = father.get(customerId);
+            if (parent == customerId) {
+                graph.put(customerId, new HashSet<>());
+            } else {
+                Set<Integer> neighbors = graph.getOrDefault(customerId, new HashSet<>());
+                Set<Integer> parentNeighbors = graph.getOrDefault(parent, new HashSet<>());
+                neighbors.add(parent);
+                parentNeighbors.add(customerId);
+                graph.put(customerId, neighbors);
+                graph.put(parent, parentNeighbors);
+            }
+        }
+
         System.out.println("superReviewer graph created!");
         writeGraph("superReviewer");
     }
