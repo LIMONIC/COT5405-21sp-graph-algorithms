@@ -13,54 +13,6 @@ public class graph_make {
     Map<Integer, Customer> customerList;
     Map<Integer, Set<Integer>> graph;
 
-    public static void main(String[] args) throws Exception {
-        int option = 1;
-        String filePath = "assignment1-data/";
-        try {
-            System.out.println("This class generates graph and outputs a txt file.");
-            if (args.length < 1) {
-                System.out.println("The Input File name is not specified!");
-                System.out.println("This class take file path as argument.");
-                return;
-            } else if (args.length == 1) {
-                filePath = args[0];
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    System.out.println("File not exist! Check your input.");
-                }
-            } else if (args.length > 1) {
-                System.out.println("Too many arguments!");
-            }
-            System.out.println("Options: ");
-            System.out.println("\t1: At least watched one movie in common");
-            System.out.println("\t2: Super reviewer vs inactive reviewer");
-            System.out.println("\t3: ...");
-            System.out.println("\t4: ...");
-            System.out.println("Your input:");
-            Scanner in = new Scanner(System.in);
-            option = in.nextInt();
-        } catch (Exception e) {
-            System.out.println("Error");
-            return;
-        }
-        GraphMake gm = new GraphMake();
-        switch (option) {
-            case 1:
-                gm.oneMovieInCommon(filePath);
-                break;
-            case 2:
-                gm.readRatingFiles(filePath);
-                gm.superReviewer();
-                break;
-            case 3:
-                // ...
-                break;
-            default:
-                System.out.println("Option dose not exist!");
-        }
-    }
-
-
     /**
      * @MethodName: readRatingFiles
      * @Param: []
@@ -84,9 +36,11 @@ public class graph_make {
                     while ((lineContent = br.readLine()) != null) {
                         if (lineContent.toCharArray()[lineContent.length() - 1] == ':') {
                             movieId = Integer.parseInt(lineContent.substring(0, lineContent.length() - 1));
+                            /*
                             if (movieId % 1000 == 0) {
                                 System.out.println(movieId + " movies have been read.");
                             }
+                             */
                         } else {
                             try {
                                 content = lineContent.split(",");
@@ -464,328 +418,76 @@ public class graph_make {
     }
 
     /**
-     * @MethodName: destinedPerson
+     * @MethodName: goodReview
      * @Param: [int]
      * @Return: void
-     * @Description: This method output a graph, in which all vertices are connected based on the month they commented on random movieNum movies.
+     * @Description: This method output a graph, in which all vertices are connected based on the average score of their comments.
+     * 3 tires are applied. Users with average Score between 4~5 considered as "Tolerant Reviewer", users with average Score between 2~4 considered as "Normal Reviewer",
+     * users with average Score between 0~2 considered as "Picky Reviewer"
+     * The average number of comments per user is 209.
      */
-    public void destinedPerson(int movieNum) {
-        System.out.println("Start create destinedPerson graph...");
-
-        Set<Customer> movieList = new HashSet<>();
-
-        int[] certainId = new int[movieNum];
-        for(int i = 0; i < movieNum; ++i){
-            certainId[i] = (int) ((Math.random() * (5 - 1)) + 1);;
-        }
-
-        for (int i = 1; i < 5; i++) {
-            String filePath = "assignment/ratings_data_" + i + ".txt";
-            System.out.println("Start Reading file: " + filePath);
-            File file = new File(filePath);
-            if (file.exists()) {
-                try {
-                    FileReader fileReader = new FileReader(file);
-                    BufferedReader br = new BufferedReader(fileReader);
-                    String lineContent = null;
-                    String[] content;
-                    int movieId = 0;
-
-                    while ((lineContent = br.readLine()) != null) {
-                        if (lineContent.toCharArray()[lineContent.length() - 1] == ':') {
-                            movieId = Integer.parseInt(lineContent.substring(0, lineContent.length() - 1));
-                        } else {
-                            try {
-                                boolean continueOrNot = true;
-                                for(int j = 0; j < movieNum; ++j){
-                                    if (movieId == certainId[j])
-                                        continueOrNot = false;
-                                }
-                                if(continueOrNot)
-                                    continue;
-
-                                content = lineContent.split(",");
-                                if (content.length != 3) {
-                                    throw new Exception();
-                                }
-                                int customerID = Integer.parseInt(content[0]);
-                                int rating = Integer.parseInt(content[1]);
-                                String date = content[2];
-
-                                Customer currCustomer = new Customer(customerID);
-                                currCustomer.rateMovie(movieId, rating, date);
-                                movieList.add(currCustomer);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    br.close();
-                    fileReader.close();
-                } catch (FileNotFoundException e) {
-                    System.out.println("file not found!");
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    System.out.println("io exception");
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        System.out.println("Start build oneMovieInCommon graph...");
-
+    public void goodReview() {
+        System.out.println("Start create superReviewer graph...");
         graph = new HashMap<>();
-        Map<Integer, Integer> monthToCustomer = new HashMap<>();      // The first customer that watched in the month
-        for (Customer customer : movieList) {
 
-            int month = customer.movieList.values().stream().findFirst().get().month;
-            graph.putIfAbsent(customer.id, new HashSet<>());
-            if (!monthToCustomer.containsKey(month))
-            {
-                monthToCustomer.put(month, customer.id);
-                graph.put(customer.id, new HashSet<>());
+        int highReviewer = -1, mediumReviewer = -1, lowReviewer = -1;
+        boolean q1 = false, q2 = false, q3 = false;
+
+        // use union find to construct graph
+        Map<Integer, Integer> father = new HashMap<>();
+        initUnionFind(customerList.keySet(), father);
+        for (Integer customerId : customerList.keySet()) {
+            int num = customerList.get(customerId).movieList.size();
+            // compute aveScore
+            int aveScore = 0;
+            for (Integer key : customerList.get(customerId).movieList.keySet()){
+                Rating rating = customerList.get(customerId).movieList.get(key);
+                aveScore += rating.val;
             }
-            else
-            {
-                if (monthToCustomer.get(month) != customer.id){
-                    graph.get(monthToCustomer.get(month)).add(customer.id);
-                    graph.get(customer.id).add(monthToCustomer.get(month));
+            aveScore /= num;
+
+            if (aveScore < 2.0) {
+                if (lowReviewer == -1) {
+                    lowReviewer = find(customerId, father);
+                } else {
+                    assert lowReviewer > -1 : "inactiveReviewer not initialized!";
+                    join(customerId, lowReviewer, father);
+                }
+            } else if (aveScore >= 2.0 && aveScore < 4.0) {
+                if (mediumReviewer == -1) {
+                    mediumReviewer = find(customerId, father);
+                } else {
+                    assert mediumReviewer > -1 : "regularReviewer not initialized!";
+                    join(customerId, mediumReviewer, father);
+                }
+            }  else {
+                if (highReviewer == -1) {
+                    highReviewer = find(customerId, father);
+                } else {
+                    assert highReviewer > -1 : "superReviewer not initialized!";
+                    join(customerId, highReviewer, father);
                 }
             }
         }
 
-        System.out.println("destinedPerson graph created!");
-        writeGraph("destinedPerson");
-    }
-
-    /**
-     * @MethodName: allTheSame
-     * @Param: []
-     * @Return: void
-     * @Description: This method output a graph, in which all vertices are connected if they give the same rating score on the same movie on the same day.
-     */
-    public void allTheSame() {
-        System.out.println("Start create destinedPerson graph...");
-
+        // generate formatted graph
         graph = new HashMap<>();
-        Set<Customer> movieCustomerList = new HashSet<>();
-
-        for (int fileNumber = 1; fileNumber < 2; ++fileNumber) {
-            String filePath = "assignment/ratings_data_" + fileNumber + ".txt";
-            // String filePath = "assignment_data/test.txt";
-            System.out.println("Start Reading file: " + filePath);
-            File file = new File(filePath);
-            if (file.exists()) {
-                try {
-                    FileReader fileReader = new FileReader(file);
-                    BufferedReader br = new BufferedReader(fileReader);
-                    String lineContent = null;
-                    String[] content;
-                    int movieId = 0;
-
-                    while ((lineContent = br.readLine()) != null) {
-                        if (lineContent.toCharArray()[lineContent.length() - 1] == ':') {
-                            if (movieId != 0){
-                                // process the former movieCustomerList
-                                Customer[] movieCustomerArray = movieCustomerList.toArray(new Customer[0]);
-                                int customerNumber = movieCustomerList.size();
-                                for (int i = 0; i < customerNumber; ++i) {
-                                    graph.putIfAbsent(movieCustomerArray[i].id, new HashSet<>());
-                                    for (int j = i + 1; j < customerNumber; ++j) {
-                                        Rating ri = movieCustomerArray[i].movieList.values().stream().findFirst().get();
-                                        Rating rj = movieCustomerArray[j].movieList.values().stream().findFirst().get();
-                                        int vi = ri.val;
-                                        int vj = rj.val;;
-                                        int yi = ri.year;
-                                        int mi = ri.month;
-                                        int di = ri.day;
-                                        int yj = rj.year;
-                                        int mj = rj.month;
-                                        int dj = rj.day;
-                                        if (vi == vj && yi == yj && mi == mj && di == dj) {
-                                            Set<Integer> adjList_i = graph.getOrDefault(movieCustomerArray[i], new HashSet<>());
-                                            Set<Integer> adjList_j = graph.getOrDefault(movieCustomerArray[j], new HashSet<>());
-                                            adjList_i.add(movieCustomerArray[j].id);
-                                            adjList_j.add(movieCustomerArray[i].id);
-                                            graph.put(movieCustomerArray[i].id, adjList_i);
-                                            graph.put(movieCustomerArray[j].id, adjList_j);
-                                        }
-                                    }
-                                }
-
-                            }
-                            movieCustomerList.clear();
-                            movieId = Integer.parseInt(lineContent.substring(0, lineContent.length() - 1));
-                        } else {
-                            try {
-                                content = lineContent.split(",");
-                                if (content.length != 3) {
-                                    throw new Exception();
-                                }
-                                int customerID = Integer.parseInt(content[0]);
-                                int rating = Integer.parseInt(content[1]);
-                                String date = content[2];
-
-                                Customer currCustomer = new Customer(customerID);
-                                currCustomer.rateMovie(movieId, rating, date);
-                                movieCustomerList.add(currCustomer);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    br.close();
-                    fileReader.close();
-                } catch (FileNotFoundException e) {
-                    System.out.println("file not found!");
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    System.out.println("io exception");
-                    e.printStackTrace();
-                }
+        for (int customerId : father.keySet()) {
+            int parent = father.get(customerId);
+            if (parent == customerId) {
+                graph.put(customerId, new HashSet<>());
+            } else {
+                Set<Integer> neighbors = graph.getOrDefault(customerId, new HashSet<>());
+                Set<Integer> parentNeighbors = graph.getOrDefault(parent, new HashSet<>());
+                neighbors.add(parent);
+                parentNeighbors.add(customerId);
+                graph.put(customerId, neighbors);
+                graph.put(parent, parentNeighbors);
             }
         }
 
-        System.out.println("allTheSame graph created!");
-        writeGraph("allTheSame");
+        System.out.println("goodReview graph created!");
+        writeGraph("goodReview");
     }
-
-    /*
-        // Top k movies
-    // ----------------------------------
-    public void top_k_movie(int k) {
-        graph.clear();
-        Map<Double, Integer> ave_score = new TreeMap<>(new MyComparatorBigtoSmall());
-        for (Integer mid : movieList.keySet()) {
-            double ave = 0;
-            for (user u : movieList.get(mid)) {
-                ave += u.score;
-            }
-            ave /= movieList.get(mid).size();
-            ave_score.put(ave, mid);
-        }
-
-        Iterator<Double> it = ave_score.keySet().iterator();
-
-        // connect users in top k list
-        List<Integer> graph_list = new ArrayList<Integer>();
-        for (int i = 0; i < k && it.hasNext(); ++i) {
-            for (user uid : movieList.get(ave_score.get(it.next())))
-                graph_list.add(uid.id);
-        }
-
-        Integer[] id = graph_list.toArray(new Integer[0]);
-        int id_num = graph_list.size();
-        for (int i = 0; i < id_num; ++i) {
-            graph.putIfAbsent(id[i], new ArrayList<>());
-            for (int j = i + 1; j < id_num; ++j) {
-                List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
-                List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
-                adjList_i.add(id[j]);
-                adjList_j.add(id[i]);
-                graph.put(id[i], adjList_i);
-                graph.put(id[j], adjList_j);
-            }
-        }
-
-    }
-
-    // watched on the same day
-    public void same_data(int y, int m, int d) {
-        List<Integer> adjList = new ArrayList<>();
-        for (Integer uid : customerList.keySet()) {
-            Map<Integer, Rating> ml = customerList.get(uid).movieList;
-            for (Integer mid : ml.keySet()) {
-                if (ml.get(mid).year == y && ml.get(mid).month == m && ml.get(mid).day == d) {
-                    adjList.add(uid);
-                    break;
-                }
-            }
-        }
-        Integer[] id = adjList.toArray(new Integer[0]);
-        int id_num = adjList.size();
-        for (int i = 0; i < id_num; ++i) {
-            graph.putIfAbsent(id[i], new ArrayList<>());
-            for (int j = i + 1; j < id_num; ++j) {
-                List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
-                List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
-                adjList_i.add(id[j]);
-                adjList_j.add(id[i]);
-                graph.put(id[i], adjList_i);
-                graph.put(id[j], adjList_j);
-            }
-        }
-    }
-
-    // Coldest Movie
-    // ----------------------------
-    public void coldest_movies() {
-        graph.clear();
-
-        // graph initialization
-        for (Integer key : customerList.keySet()) {
-            graph.putIfAbsent(key, new ArrayList<>());
-        }
-
-        Map<Integer, Integer> c_num = new TreeMap<>(new MyComparatorSmalltoBig());
-        for (Integer mid : movieList.keySet()) {
-            int num = movieList.get(mid).size();
-            c_num.put(mid, num);
-        }
-
-        List<Entry<Integer, Integer>> list = new ArrayList<Entry<Integer, Integer>>(c_num.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
-            //
-            public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
-                return o1.getValue().compareTo(o2.getValue());
-            }
-        });
-
-        // connect customers in the coldest N movies respectively
-
-        List<Integer> graph_list = new ArrayList<Integer>();
-        for (user uid : movieList.get(list.get(0).getKey())) {
-            graph_list.add(uid.id);
-        }
-        Integer[] id = graph_list.toArray(new Integer[0]);
-        int id_num = graph_list.size();
-        for (int i = 0; i < id_num; ++i) {
-            graph.putIfAbsent(id[i], new ArrayList<>());
-            for (int j = i + 1; j < id_num; ++j) {
-                List<Integer> adjList_i = graph.getOrDefault(id[i], new ArrayList<>());
-                List<Integer> adjList_j = graph.getOrDefault(id[j], new ArrayList<>());
-                adjList_i.add(id[j]);
-                adjList_j.add(id[i]);
-                graph.put(id[i], adjList_i);
-                graph.put(id[j], adjList_j);
-            }
-        }
-
-    }
-
-    // compactor
-    // ---------------------------------------------------------
-    class MyComparatorBigtoSmall implements Comparator<Double> {
-        @Override
-        public int compare(Double o1, Double o2) {
-            if (o2 > o1)
-                return 1;
-            else
-                return 0;
-        }
-    }
-
-    class MyComparatorSmalltoBig implements Comparator<Integer> {
-        @Override
-        public int compare(Integer o1, Integer o2) {
-            if (o2 < o1)
-                return 1;
-            else
-                return 0;
-        }
-    }
-
-     */
 
 }
