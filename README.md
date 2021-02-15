@@ -109,6 +109,28 @@ The performance of the programs are instrumented by run-time and memory consumpt
 5. Truncated heap
 6. Equivalence mod K
 * ### real_test.java
+    * Windows: 
+        ```bash
+      $ javac <java_file>
+        ```
+        Compile simulated_test.java, graph_simulator.java and graph_operations.java with javac compiler.
+      ```bash
+      $ java -Xmx57344m real_test <file_folder_path / graph_file_path> 
+      ```
+        This command simulates a designed type of graph and perform finding connected components, finding cycle, finding shorted path from all other vertices to certain vertex in sequence. The run time in milliseconds and peak memory usage in bytes will be printed and saved in ***<graph_type>_connectedComponents.txt***. Results from the testing method will also be saved in the txt file.
+      <br/>
+      <br/>
+    * Linux:
+        ```bash
+        $ make
+      ```
+      The make command compiles the simulated_test.java, real_test.java and their corresponding class files with javac compiler.
+        ```bash
+        $ java -Xmx57344m real_test <file_folder_path / graph_file_path>
+      ```
+      Same with Windows.
+      <br/>
+      <br/>
 
 ## Credit
 
