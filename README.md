@@ -117,7 +117,7 @@ The performance of the programs are instrumented by run-time and memory consumpt
       ```bash
       $ java -Xmx57344m real_test <file_folder_path / graph_file_path> 
       ```
-        This command simulates a designed type of graph and perform finding connected components, finding cycle, finding shorted path from all other vertices to certain vertex in sequence. The run time in milliseconds and peak memory usage in bytes will be printed and saved in ***<graph_type>_connectedComponents.txt***. Results from the testing method will also be saved in the txt file.
+        This command can make three different graphs based on the given Netflix data and perform finding connected components. To read all four Netflix data file, the argument is file *folder* path; To read from graph data, the argument is graph file path. The run time in milliseconds and peak memory usage in byte will be printed. The number of connected components and size of each component in the graphs will be saved in ***<graph_type>_ connectedComponents.txt***. Results from the testing method will also be saved in the txt file. 
       <br/>
       <br/>
     * Linux:

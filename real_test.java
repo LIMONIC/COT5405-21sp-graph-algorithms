@@ -54,7 +54,7 @@ public class real_test {
                 break;
         }
         endTime = System.currentTimeMillis();
-        System.out.println( rt.graphName + " graph make running time： " + (endTime - startTime) + "ms");
+        System.out.println( rt.graphName + " graph make running time: " + (endTime - startTime) + "ms");
 
         runtime = Runtime.getRuntime();
         runtime.gc();
@@ -122,7 +122,7 @@ public class real_test {
      * @Return: void
      * @Description: Read graph data and find connected components
      */
-    public void option2(){
+    public void option2()throws Exception{
         readGraph(filePath);
         connectedComponentExp(filePath);
     }
@@ -165,7 +165,7 @@ public class real_test {
     public void autoTest() throws Exception{
         graph_make gm = new graph_make();
         List<String> nameList = new ArrayList<>();
-        //nameList.add("oneMovieInCommon");
+        nameList.add("oneMovieInCommon");
         nameList.add("superReviewer");
         nameList.add("goodReview");
         long mgStartTime = 0, ccStartTime = 0, stopTime, memory;
@@ -245,7 +245,7 @@ public class real_test {
         }
     }
 
-    public void readGraph(String filePath) {
+    public void readGraph(String filePath) throws Exception{
         graph = new HashMap<>();
 
         System.out.println("Start Reading file: " + filePath);
@@ -359,7 +359,7 @@ public class real_test {
         }
     }
 
-    private void readMovieToCustomer(String path, long lineNum, Map<Integer, Set<Integer>> movieToCustomer, Set<Integer> customerSet){
+    private void readMovieToCustomer(String path, long lineNum, Map<Integer, Set<Integer>> movieToCustomer, Set<Integer> customerSet)throws Exception{
         movieToCustomer.clear();
         customerSet.clear();
         long num = 0;
@@ -427,7 +427,7 @@ public class real_test {
      * @Return: void
      * @Description: Output a txt file with given name that contains the structure of the graph. graph represented by adjacency list.
      */
-    public void writeGraph(String name) {
+    public void writeGraph(String name) throws Exception{
         System.out.println("Start writing graph " + name + "...");
         FileWriter writer;
         try {

@@ -259,21 +259,21 @@ public class graph_make {
                 if (pickyReviewer == -1) {
                     pickyReviewer = find(customerId, father);
                 } else {
-                    assert pickyReviewer > -1 : "inactiveReviewer not initialized!";
+                    assert pickyReviewer > -1 : "pickyReviewer not initialized!";
                     join(customerId, pickyReviewer, father);
                 }
             } else if (aveScore >= 2.0 && aveScore < 4.0) {
                 if (objectiveReviewer == -1) {
                     objectiveReviewer = find(customerId, father);
                 } else {
-                    assert objectiveReviewer > -1 : "regularReviewer not initialized!";
+                    assert objectiveReviewer > -1 : "objectiveReviewer not initialized!";
                     join(customerId, objectiveReviewer, father);
                 }
             }  else {
                 if (tolerantReviewer == -1) {
                     tolerantReviewer = find(customerId, father);
                 } else {
-                    assert tolerantReviewer > -1 : "superReviewer not initialized!";
+                    assert tolerantReviewer > -1 : "tolerantReviewer not initialized!";
                     join(customerId, tolerantReviewer, father);
                 }
             }
