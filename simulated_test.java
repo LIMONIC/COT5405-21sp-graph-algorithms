@@ -53,47 +53,35 @@ public class simulated_test {
             case 1:
                 name = "nCycle";
                 graph = gs.nCycle();
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             case 2:
                 name = "completeGraph";
                 graph = gs.completeGraph();
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             case 3:
                 name = "emptyGraph";
                 graph = gs.emptyGraph();
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             case 4:
                 name = "heap";
                 graph = gs.heap();
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             case 5:
                 name = "truncatedHeap";
                 graph = gs.truncatedHeap(graphSize * 3 / 10);
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             case 6:
                 name = "equivalenceModK";
                 graph = gs.equivalenceModK(graphSize * 3 / 10);
-                st.connectedComponentExp(name, graph);
-                st.oneCycleExp(name, graph);
-                st.shortestPathExp(name, graph);
                 break;
             default:
                 System.out.println("Option dose not exist!");
+                return;
+        }
+        for (int i = 0; i < 5; i++) {
+            st.connectedComponentExp(name, graph);
+            st.oneCycleExp(name, graph);
+            st.shortestPathExp(name, graph);
         }
 
     }
@@ -119,7 +107,8 @@ public class simulated_test {
         // Calculate the used memory
         long memory = runtime.totalMemory() - runtime.freeMemory();
         System.out.println("Used memory is " + memory + " bytes.");
-
+        writeResult(name, "connectedComponentExp", graph.size(), ((stopTime - startTime) / 10 / 1000), memory);
+/*
         // output
         System.out.println("Start write result of connected component of " + name + "...");
         FileWriter writer;
@@ -135,6 +124,8 @@ public class simulated_test {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+ */
         System.out.println("Finished!");
         System.out.println("--------------");
     }
@@ -160,7 +151,8 @@ public class simulated_test {
         // Calculate the used memory
         long memory = runtime.totalMemory() - runtime.freeMemory();
         System.out.println("Used memory is " + memory + " bytes.");
-
+        writeResult(name, "oneCycleExp", graph.size(), ((stopTime - startTime) / 10 / 1000), memory);
+/*
         // output
         System.out.println("Start write result of one cycle of " + name + "...");
         FileWriter writer;
@@ -179,6 +171,8 @@ public class simulated_test {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+ */
         System.out.println("Finished!");
         System.out.println("--------------");
     }
@@ -208,7 +202,8 @@ public class simulated_test {
         // Calculate the used memory
         long memory = runtime.totalMemory() - runtime.freeMemory();
         System.out.println("Used memory is bytes: " + memory);
-
+        writeResult(name, "shortestPathExp", graph.size(), ((stopTime - startTime) / 10 / 1000), memory);
+/*
         // output
         System.out.println("Start write result of shortest path of " + name + "...");
         FileWriter writer;
@@ -226,10 +221,24 @@ public class simulated_test {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+ */
         System.out.println("Finished!");
         System.out.println("--------------");
 
     }
 
+    private void writeResult (String name, String method, int size, long runTime, long memory){
+
+        String fileName = "[Results]" + method + "_" + name + ".csv";
+
+        try {
+            FileWriter writer = new FileWriter(fileName, true);
+            writer.write(size + "," + runTime + "," + memory + "\r\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
