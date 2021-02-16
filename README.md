@@ -3,7 +3,7 @@
 This is a course project for COT5405 Analysis of Algorithm in 21 spring.
 
 - [Introduction](#Introduction)
-- [Class Structure](#Class Structure)
+- [Class Structure](#Structure)
     - [GraphOperation](#GraphOperation)
     - [GraphSimulator](#GraphSimulator)
     - [SimulatedTest](#SimulatedTest)
@@ -28,7 +28,7 @@ two parts:
 
 The performance of the programs are instrumented by run-time and memory consumption.
 
-## Class Structure
+## Structure
 
 ### GraphOperation
 
