@@ -143,9 +143,11 @@ public class real_test {
         try {
             writer = new FileWriter(name + "_connectedComponents.txt");
 
+            /*
             for (List<Integer> cc : connectedComponents) {
                 writer.write(cc.toString() + "\r\n");
             }
+             */
 
             writer.write("The number of connected components: " + connectedComponents.size() + "\r\n");
             writer.write("Size of each connected component: \r\n");
