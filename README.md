@@ -32,9 +32,9 @@ The performance of the programs are instrumented by run-time and memory consumpt
 ## Class Structure
 
 ### GraphOperation
-***connected_components():*** using depth-First search to return the list of connected components.
+***connected_components():*** using depth-first search to return the list of connected components.
 
-***one_cycle():*** using depth-First search to return a cycle, or an empty list.
+***one_cycle():*** using depth-first search to return a cycle, or an empty list.
 
 ***shortest_paths():*** using Dijkstra's algorithm and returns a map of the shortest paths.
 ### GraphSimulator
@@ -131,8 +131,6 @@ The performance of the programs are instrumented by run-time and memory consumpt
       Same with Windows.
       <br/>
       <br/>
-
-## Credit
 
 ## License
 
