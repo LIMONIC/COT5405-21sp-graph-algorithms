@@ -7,7 +7,7 @@ public class real_test {
     String filePath;
     String graphName = "";
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         int option = 1;
         real_test rt = new real_test();
         rt.filePath = "";
@@ -42,7 +42,7 @@ public class real_test {
         long startTime, endTime, memory;
         Runtime runtime;
         startTime = System.currentTimeMillis();
-        switch (option){
+        switch (option) {
             case 1:
                 rt.option1();
                 break;
@@ -54,7 +54,7 @@ public class real_test {
                 break;
         }
         endTime = System.currentTimeMillis();
-        System.out.println( rt.graphName + " graph make running time: " + (endTime - startTime) + "ms");
+        System.out.println(rt.graphName + " graph make running time: " + (endTime - startTime) + "ms");
 
         runtime = Runtime.getRuntime();
         runtime.gc();
@@ -70,39 +70,39 @@ public class real_test {
      * @Return: void
      * @Description: Read Netflix data, make graph and find connected components.
      */
-    public void option1() throws Exception{
+    public void option1() throws Exception {
         int option = -1;
-        try{
+        try {
             System.out.println("\t1: At least watched one movie in common");
             System.out.println("\t2: Super reviewer vs active reviewer vs regular reviewer vs inactive reviewer");
             System.out.println("\t3: Tolerant Reviewer vs Objective Reviewer vs Picky Reviewer");
             System.out.println("Your input:");
             Scanner in = new Scanner(System.in);
             option = in.nextInt();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error");
         }
 
         graph_make gm = new graph_make();
         switch (option) {
             case 1:
-                if(gm.movieToCustomer == null)
+                if (gm.movieToCustomer == null)
                     gm.movieToCustomer = new HashMap<>();
-                if(gm.customerSet == null)
+                if (gm.customerSet == null)
                     gm.customerSet = new HashSet<>();
                 readMovieToCustomer(filePath, 0, gm.movieToCustomer, gm.customerSet);
                 gm.oneMovieInCommon();
                 graphName = "oneMovieInCommon";
                 break;
             case 2:
-                if(gm.customerList == null)
+                if (gm.customerList == null)
                     gm.customerList = new HashMap<>();
                 readCustomerList(filePath, 0, gm.customerList);
                 gm.superReviewer();
                 graphName = "superReviewer";
                 break;
             case 3:
-                if(gm.customerList == null)
+                if (gm.customerList == null)
                     gm.customerList = new HashMap<>();
                 readCustomerList(filePath, 0, gm.customerList);
                 gm.goodReview();
@@ -122,7 +122,7 @@ public class real_test {
      * @Return: void
      * @Description: Read graph data and find connected components
      */
-    public void option2()throws Exception{
+    public void option2() throws Exception {
         readGraph(filePath);
         connectedComponentExp(filePath);
     }
@@ -162,7 +162,7 @@ public class real_test {
         System.out.println("write finished!");
     }
 
-    public void autoTest() throws Exception{
+    public void autoTest() throws Exception {
         graph_make gm = new graph_make();
         List<String> nameList = new ArrayList<>();
         nameList.add("oneMovieInCommon");
@@ -174,34 +174,34 @@ public class real_test {
         try {
             writer = new FileWriter("autoTest.txt");
 
-            for(String name : nameList){
+            for (String name : nameList) {
                 writer.write("\r\n\r\n********************************************\r\n");
                 writer.write(name + ":\r\n");
-                for(long i = 10000000; i < 110000000; i+=10000000){
+                for (long i = 10000000; i < 110000000; i += 10000000) {
                     writer.write("---------------------------------------------\r\n");
                     writer.write("line number:" + i + ":\r\n");
                     // read Netflix
                     writer.write(".............................................\r\n");
                     writer.write("Read Netflix Dta:\r\n");
-                    switch (name){
+                    switch (name) {
                         case "oneMovieInCommon":
-                            if(gm.movieToCustomer == null)
+                            if (gm.movieToCustomer == null)
                                 gm.movieToCustomer = new HashMap<>();
-                            if(gm.customerSet == null)
+                            if (gm.customerSet == null)
                                 gm.customerSet = new HashSet<>();
                             readMovieToCustomer(filePath, i, gm.movieToCustomer, gm.customerSet);
                             mgStartTime = System.nanoTime();
                             gm.oneMovieInCommon();
                             break;
                         case "superReviewer":
-                            if(gm.customerList == null)
+                            if (gm.customerList == null)
                                 gm.customerList = new HashMap<>();
                             readCustomerList(filePath, i, gm.customerList);
                             mgStartTime = System.nanoTime();
                             gm.superReviewer();
                             break;
                         case "goodReview":
-                            if(gm.customerList == null)
+                            if (gm.customerList == null)
                                 gm.customerList = new HashMap<>();
                             readCustomerList(filePath, i, gm.customerList);
                             mgStartTime = System.nanoTime();
@@ -210,7 +210,7 @@ public class real_test {
                     }
                     graph = gm.graph;
                     ccStartTime = System.nanoTime();
-                    connectedComponentExp("netflix_" + name + "_" + i/10000000);
+                    connectedComponentExp("netflix_" + name + "_" + i / 10000000);
                     stopTime = System.nanoTime();
                     writeGraph(name);
                     writer.write("make_graph run time(ms):" + ((ccStartTime - mgStartTime) / 10 / 1000) + "ms\r\n");
@@ -245,7 +245,7 @@ public class real_test {
         }
     }
 
-    public void readGraph(String filePath) throws Exception{
+    public void readGraph(String filePath) throws Exception {
         graph = new HashMap<>();
 
         System.out.println("Start Reading file: " + filePath);
@@ -301,7 +301,7 @@ public class real_test {
         long num = 0;
         boolean breakOrNot = false;
         for (int i = 1; i < 5; i++) {
-            if(breakOrNot)
+            if (breakOrNot)
                 break;
             String filePath = path + "ratings_data_" + i + ".txt";
             System.out.println("Start Reading file: " + filePath);
@@ -315,7 +315,7 @@ public class real_test {
                     int movieId = 0;
 
                     while ((lineContent = br.readLine()) != null) {
-                        if(++num >= lineNum && lineNum != 0){
+                        if (++num >= lineNum && lineNum != 0) {
                             breakOrNot = true;
                             break;
                         }
@@ -359,14 +359,14 @@ public class real_test {
         }
     }
 
-    private void readMovieToCustomer(String path, long lineNum, Map<Integer, Set<Integer>> movieToCustomer, Set<Integer> customerSet)throws Exception{
+    private void readMovieToCustomer(String path, long lineNum, Map<Integer, Set<Integer>> movieToCustomer, Set<Integer> customerSet) throws Exception {
         movieToCustomer.clear();
         customerSet.clear();
         long num = 0;
         boolean breakOrNot = false;
 
         for (int i = 1; i < 5; i++) {
-            if(breakOrNot)
+            if (breakOrNot)
                 break;
             String filePath = path + "ratings_data_" + i + ".txt";
             System.out.println("Start Reading file: " + filePath);
@@ -380,7 +380,7 @@ public class real_test {
                     int movieId = 0;
 
                     while ((lineContent = br.readLine()) != null) {
-                        if(++num >= lineNum && lineNum != 0){
+                        if (++num >= lineNum && lineNum != 0) {
                             breakOrNot = true;
                             break;
                         }
@@ -427,7 +427,7 @@ public class real_test {
      * @Return: void
      * @Description: Output a txt file with given name that contains the structure of the graph. graph represented by adjacency list.
      */
-    public void writeGraph(String name) throws Exception{
+    public void writeGraph(String name) throws Exception {
         System.out.println("Start writing graph " + name + "...");
         FileWriter writer;
         try {

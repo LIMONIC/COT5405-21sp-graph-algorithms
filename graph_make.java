@@ -249,7 +249,7 @@ public class graph_make {
             int num = customerList.get(customerId).movieList.size();
             // compute aveScore
             int aveScore = 0;
-            for (Integer key : customerList.get(customerId).movieList.keySet()){
+            for (Integer key : customerList.get(customerId).movieList.keySet()) {
                 Rating rating = customerList.get(customerId).movieList.get(key);
                 aveScore += rating.val;
             }
@@ -269,7 +269,7 @@ public class graph_make {
                     assert objectiveReviewer > -1 : "objectiveReviewer not initialized!";
                     join(customerId, objectiveReviewer, father);
                 }
-            }  else {
+            } else {
                 if (tolerantReviewer == -1) {
                     tolerantReviewer = find(customerId, father);
                 } else {

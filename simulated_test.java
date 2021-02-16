@@ -11,13 +11,13 @@ import java.util.*;
 public class simulated_test {
 
     /**
-    * @MethodName: main
-    * @Param: [java.lang.String[]]
-    * @Return: void
-    * @Description: Main method for generating simulated data and running the graph operation on it.
-     *              The performance of each operation on the graph are instrumented.
-     *              Performance and results are written in txt files;
-    */
+     * @MethodName: main
+     * @Param: [java.lang.String[]]
+     * @Return: void
+     * @Description: Main method for generating simulated data and running the graph operation on it.
+     * The performance of each operation on the graph are instrumented.
+     * Performance and results are written in txt files;
+     */
     public static void main(String[] args) {
         // [Graph_size] [method_name]
         int graphSize;
@@ -87,11 +87,11 @@ public class simulated_test {
     }
 
     /**
-    * @MethodName: connectedComponentExp
-    * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
-    * @Return: void
-    * @Description: Perform experiment of connected components on selected graph.
-    */
+     * @MethodName: connectedComponentExp
+     * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
+     * @Return: void
+     * @Description: Perform experiment of connected components on selected graph.
+     */
     public void connectedComponentExp(String name, Map<Integer, Set<Integer>> graph) {
         List<List<Integer>> connectedComponents = new ArrayList<>();
         graph_operations go = new graph_operations();
@@ -131,11 +131,11 @@ public class simulated_test {
     }
 
     /**
-    * @MethodName: oneCycleExp
-    * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
-    * @Return: void
-    * @Description: Perform experiment of find cycle on selected graph.
-    */
+     * @MethodName: oneCycleExp
+     * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
+     * @Return: void
+     * @Description: Perform experiment of find cycle on selected graph.
+     */
     public void oneCycleExp(String name, Map<Integer, Set<Integer>> graph) {
         List<Integer> cycle = new ArrayList<>();
         graph_operations go = new graph_operations();
@@ -178,11 +178,11 @@ public class simulated_test {
     }
 
     /**
-    * @MethodName: shortestPathExp
-    * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
-    * @Return: void
-    * @Description: Perform experiment of shortest path on selected graph. The start point are randomly selected from graph key set.
-    */
+     * @MethodName: shortestPathExp
+     * @Param: [java.lang.String, java.util.Map<java.lang.Integer,java.util.Set<java.lang.Integer>>]
+     * @Return: void
+     * @Description: Perform experiment of shortest path on selected graph. The start point are randomly selected from graph key set.
+     */
     public void shortestPathExp(String name, Map<Integer, Set<Integer>> graph) {
         Map<Integer, List<Integer>> shortestPath = new HashMap<>();
         graph_operations go = new graph_operations();
@@ -228,7 +228,7 @@ public class simulated_test {
 
     }
 
-    private void writeResult (String name, String method, int size, long runTime, long memory){
+    private void writeResult(String name, String method, int size, long runTime, long memory) {
 
         String fileName = "[Results]" + method + "_" + name + ".csv";
 

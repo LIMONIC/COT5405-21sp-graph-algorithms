@@ -168,20 +168,16 @@ public class graph_operations {
 
         public Vertex() {
         }
-
         public Vertex(Integer id, Integer dis) {
             this.id = id;
             this.dis = dis;
         }
-
         public Integer getDis() {
             return dis;
         }
-
         public Integer getID() {
             return id;
         }
-
         @Override
         public int compare(Vertex v1, Vertex v2) {
             if (v1.dis < v2.dis)

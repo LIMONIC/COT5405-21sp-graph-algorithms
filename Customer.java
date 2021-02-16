@@ -10,7 +10,6 @@ public class Customer {
         this.id = id;
         movieList = new HashMap<>();
     }
-
     // add movie review
     public void rateMovie(int movieID, int rating, String date) {
         Rating r = new Rating(rating, date);
